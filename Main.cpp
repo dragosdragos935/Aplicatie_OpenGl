@@ -1,193 +1,919 @@
-﻿#define STB_IMAGE_IMPLEMENTATION
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+﻿#include <GL/glut.h>
+#include <GL/glu.h>
+#include <math.h>
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include "stb_image.h"
+#include <SOIL/SOIL.h>
 
-// Dimensiunile ferestrei
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
 
-// Variabile globale pentru cameră
-glm::vec3 cameraPos(0.0f, 1.0f, 5.0f);
-glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
-float cameraSpeed = 0.05f;
+using namespace std;
 
-// Shadere
-const char* vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
-out vec2 TexCoord;
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-void main()
+float cc[20][2];
+GLuint skyTexture;
+GLuint roadTexture;
+GLuint treeTextureTrunk;   // Textura pentru trunchiul copacului
+GLuint treeTextureLeaves;  // Textura pentru frunzele copacului
+GLuint trunkTexture;  // Textura pentru trunchiul copacului
+
+
+// Funcție pentru încărcarea texturii trunchiului
+void loadTrunkTexture() {
+	trunkTexture = SOIL_load_OGL_texture("tree_trunk.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (trunkTexture == 0) {
+		std::cout << "Eroare la încărcarea texturii trunchiului copacului!" << std::endl;
+	}
+}
+
+
+void init(void);
+void display(void);
+void keyboard(unsigned char, int, int);
+void resize(int, int);
+void draw_star(float, float);
+void house(float, float, float);
+void apart(float, float, float);
+void circle1(float);
+void stand(float, float, float);
+float  h = 5, h1 = 6, d1 = 4, g = 1, g1 = 2;
+// Funcție pentru încărcarea texturilor pentru copaci
+void loadTreeTexture() {
+	// Încărcăm textura pentru trunchiul copacului
+	treeTextureTrunk = SOIL_load_OGL_texture("tree_trunk.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (treeTextureTrunk == 0) {
+		std::cout << "Eroare la încărcarea texturii trunchiului copacului!" << std::endl;
+	}
+
+	// Încărcăm textura pentru frunzele copacului
+	treeTextureLeaves = SOIL_load_OGL_texture("tree_leaves.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (treeTextureLeaves == 0) {
+		std::cout << "Eroare la încărcarea texturii frunzelor copacului!" << std::endl;
+	}
+}
+void loadRoadTexture() {
+	roadTexture = SOIL_load_OGL_texture("road.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (roadTexture == 0) {
+		std::cout << "Eroare la încărcarea texturii drumului!" << std::endl;
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+int main(int argc, char** argv)
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-    TexCoord = aTexCoord;
-}
-)";
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowSize(1100, 1100);
+	glutInitWindowPosition(100, 10);
+	glutCreateWindow("3D map");
+	init();
 
-const char* fragmentShaderSource = R"(
-#version 330 core
-out vec4 FragColor;
-in vec2 TexCoord;
-uniform sampler2D texture1;
-void main()
+	glutDisplayFunc(display);
+	glutKeyboardFunc(keyboard);
+
+	glutReshapeFunc(resize);
+
+	glutMainLoop();
+	return 0;
+}
+GLuint buildingTexture;
+
+// În funcția de inițializare a texturii:
+void loadSkyTexture() {
+	skyTexture = SOIL_load_OGL_texture("path_to_sky_texture.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	if (skyTexture == 0) {
+		std::cout << "Eroare la încărcarea texturii cerului!" << std::endl;
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+void init(void)
 {
-    FragColor = texture(texture1, TexCoord);
-}
-)";
+	glEnable(GL_DEPTH_TEST); // Activează testul de adâncime
+	glMatrixMode(GL_MODELVIEW); // Activează modul de vizualizare a obiectelor
 
-// Funcție de încărcare texturi
-GLuint loadTexture(const char* path) {
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+	// Încarcă textura cerului
+	glGenTextures(1, &skyTexture);
+	glBindTexture(GL_TEXTURE_2D, skyTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // Setare parametrii textură
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int width, height;
+	unsigned char* image = SOIL_load_image("sky.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	if (image == NULL) {
+		std::cout << "Eroare la încărcarea imaginii cerului!" << std::endl;
+		return;
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
 
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else {
-        std::cerr << "Failed to load texture: " << path << std::endl;
-    }
-    stbi_image_free(data);
-    return texture;
-}
+	// Încarcă textura pentru clădiri
+	glGenTextures(1, &buildingTexture);
+	glBindTexture(GL_TEXTURE_2D, buildingTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-// Funcție pentru gestionarea intrărilor utilizatorului
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+	image = SOIL_load_image("building.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	if (image == NULL) {
+		std::cout << "Eroare la încărcarea imaginii clădirii!" << std::endl;
+		return;
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	// Încarcă textura pentru drum
+	loadRoadTexture();
+	loadTreeTexture();        // Texturile pentru copaci
+	loadTrunkTexture();  // Încărcăm textura trunchiului copacului
 }
 
-// Funcție pentru callback-ul de redimensionare a ferestrei
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
+void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius)
+{
+	// Desenează trunchiul copacului
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, treeTextureTrunk); // Textura pentru trunchi
+
+	GLUquadricObj* quadric = gluNewQuadric();
+	gluQuadricTexture(quadric, GL_TRUE);
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	gluCylinder(quadric, trunkRadius, trunkRadius, trunkHeight, 20, 20); // Trunchiul copacului
+	glPopMatrix();
+
+	// Dezactivează textura pentru trunchi
+	glDisable(GL_TEXTURE_2D);
+
+	// Desenează frunzele copacului
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, treeTextureLeaves); // Textura pentru frunze
+
+	glPushMatrix();
+	glTranslatef(x, y, z + trunkHeight); // Poziționează frunzele deasupra trunchiului
+	glutSolidSphere(leavesRadius, 20, 20); // Frunzele copacului
+	glPopMatrix();
+
+	// Dezactivează textura pentru frunze
+	glDisable(GL_TEXTURE_2D);
 }
 
-// Funcția principală
-int main() {
-    // Inițializare GLFW
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
-    }
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "OpenGL Scene", NULL, NULL);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // Inițializare GLEW
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW" << std::endl;
-        return -1;
-    }
+// Funcție pentru a desena o sferă pe care se aplică textura cerului
+void drawSky()
+{
+	// Activăm texturarea
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, skyTexture);  // Leagă textura "sky.jpg"
 
-    // Compilare shadere
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+	// Setează dimensiunea dreptunghiului cerului
+	GLfloat width = 1000.0f;  // Lățimea dreptunghiului
+	GLfloat height = 1000.0f; // Înălțimea dreptunghiului
 
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
+	// Desenăm dreptunghiul care reprezintă cerul
+	glBegin(GL_QUADS);
 
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
+	// Coordonate pentru texturare
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-width / 2, height / 2, -200.0f);  // Colțul stânga sus (aproape de cameră)
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(width / 2, height / 2, -200.0f);   // Colțul dreapta sus (aproape de cameră)
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(width / 2, -height / 2, -200.0f);  // Colțul dreapta jos (aproape de cameră)
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-width / 2, -height / 2, -200.0f); // Colțul stânga jos (aproape de cameră)
 
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+	glEnd();
 
-    // Definire plane pentru teren și cer
-    float groundVertices[] = {
-        -50.0f, 0.0f, -50.0f, 0.0f, 0.0f,
-         50.0f, 0.0f, -50.0f, 1.0f, 0.0f,
-         50.0f, 0.0f,  50.0f, 1.0f, 1.0f,
-        -50.0f, 0.0f,  50.0f, 0.0f, 1.0f
-    };
-    unsigned int groundIndices[] = { 0, 1, 2, 2, 3, 0 };
+	// Dezactivăm texturarea
+	glDisable(GL_TEXTURE_2D);
+}
 
-    // VAO și VBO pentru teren
-    GLuint groundVAO, groundVBO, groundEBO;
-    glGenVertexArrays(1, &groundVAO);
-    glGenBuffers(1, &groundVBO);
-    glGenBuffers(1, &groundEBO);
+void drawTrees() {
+	glEnable(GL_TEXTURE_2D);           // Activează texturarea
+	glBindTexture(GL_TEXTURE_2D, trunkTexture);  // Leagă textura de trunchiul copacului
 
-    glBindVertexArray(groundVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), groundVertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
+	GLUquadricObj* quadric = gluNewQuadric();  // Obiect pentru generarea geometriei
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+	// Desenează fiecare cub pentru trunchi
+	glPushMatrix();
+	glTranslatef(-15, 1, 50);
+	glutSolidCube(7);  // Trunchiul copacului 1
+	glPopMatrix();
 
-    // Încărcare texturi
-    GLuint textureGrass = loadTexture("grass.jpg");
+	glPushMatrix();
+	glTranslatef(-15, 1, -40);
+	glutSolidCube(7);  // Trunchiul copacului 2
+	glPopMatrix();
 
-    glEnable(GL_DEPTH_TEST);
+	glPushMatrix();
+	glTranslatef(-15, 1, 20);
+	glutSolidCube(7);  // Trunchiul copacului 3
+	glPopMatrix();
 
-    // Bucla principală de randare
-    while (!glfwWindowShouldClose(window)) {
-        processInput(window);
+	glPushMatrix();
+	glTranslatef(-15, 1, -10);
+	glutSolidCube(7);  // Trunchiul copacului 4
+	glPopMatrix();
 
-        glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glPushMatrix();
+	glTranslatef(-15, 1, -80);
+	glutSolidCube(7);  // Trunchiul copacului 5
+	glPopMatrix();
 
-        glUseProgram(shaderProgram);
+	glPushMatrix();
+	glTranslatef(-15, 1, -120);
+	glutSolidCube(7);  // Trunchiul copacului 6
+	glPopMatrix();
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glPushMatrix();
+	glTranslatef(-15, 1, -160);
+	glutSolidCube(7);  // Trunchiul copacului 7
+	glPopMatrix();
 
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glDisable(GL_TEXTURE_2D);          // Dezactivează texturarea
+}
 
-        // Randare teren
-        glBindTexture(GL_TEXTURE_2D, textureGrass);
-        glBindVertexArray(groundVAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+void drawRoad()
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, roadTexture);  // Leagă textura "road.jpg"
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
+	GLfloat width = 500.0f;  // Lățimea drumului
+	GLfloat length = 500.0f; // Lungimea drumului
 
-    glfwTerminate();
-    return 0;
+	// Desenăm dreptunghiul pentru drum
+	glBegin(GL_QUADS);
+
+	// Coordonate pentru texturare
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-width / 2, 0.0f, -length / 2);  // Colțul stânga jos
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(width / 2, 0.0f, -length / 2);   // Colțul dreapta jos
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(width / 2, 0.0f, length / 2);    // Colțul dreapta sus
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-width / 2, 0.0f, length / 2);   // Colțul stânga sus
+
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void apart(float x, float y, float z)
+{
+	int i;
+	int j;
+	glColor3f(0.7, 0.7, 0.7);
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y, z + 0.5);
+	glVertex3f(x + 45, y, z + 0.5);
+	glVertex3f(x + 45, y + 100, z + 0.5);
+	glVertex3f(x, y + 100, z + 0.5);
+	glEnd();  glColor3f(0.8, 0.8, 0.8);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(11 * i, 0, 0);
+			glBegin(GL_POLYGON);
+			glVertex3f(x + 2, y + 98, z);
+			glVertex3f(x + 10, y + 98, z);
+			glVertex3f(x + 10, y + 88, z);
+			glVertex3f(x + 2, y + 88, z);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}glColor3f(0, 0, 0);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(11 * i, 0, 0);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x + 2, y + 98, z);
+			glVertex3f(x + 10, y + 98, z);
+			glVertex3f(x + 10, y + 88, z);
+			glVertex3f(x + 2, y + 88, z);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}
+
+	glColor3f(0.6, 0.6, 0.6);
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y, z + 45 - 0.5);
+	glVertex3f(x + 45, y, z + 45 - 0.5);
+	glVertex3f(x + 45, y + 100, z + 45 - 0.5);
+	glVertex3f(x, y + 100, z + 45 - 0.5);
+	glEnd();  	glColor3f(0.8, 0.8, 0.8);
+
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(11 * i, 0, 0);
+			glBegin(GL_POLYGON);
+			glVertex3f(x + 2, y + 98, z + 45);
+			glVertex3f(x + 10, y + 98, z + 45);
+			glVertex3f(x + 10, y + 88, z + 45);
+			glVertex3f(x + 2, y + 88, z + 45);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}glColor3f(0, 0, 0);
+
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(11 * i, 0, 0);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x + 2, y + 98, z + 45);
+			glVertex3f(x + 10, y + 98, z + 45);
+			glVertex3f(x + 10, y + 88, z + 45);
+			glVertex3f(x + 2, y + 88, z + 45);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}
+
+	glColor3f(0.6, 0.6, 0.6);
+	glBegin(GL_POLYGON);
+	glVertex3f(x + 0.5, y, z);
+	glVertex3f(x + 0.5, y, z + 45);
+	glVertex3f(x + 0.5, y + 100, z + 45);
+	glVertex3f(x + 0.5, y + 100, z);
+	glEnd();
+	glColor3f(0.8, 0.8, 0.8);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(0, 0, 11 * i);
+			glBegin(GL_POLYGON);
+			glVertex3f(x, y + 98, z + 2);
+			glVertex3f(x, y + 98, z + 10);
+			glVertex3f(x, y + 88, z + 10);
+			glVertex3f(x, y + 88, z + 2);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}glColor3f(0, 0, 0);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(0, 0, 11 * i);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x, y + 98, z + 2);
+			glVertex3f(x, y + 98, z + 10);
+			glVertex3f(x, y + 88, z + 10);
+			glVertex3f(x, y + 88, z + 2);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}
+
+	glColor3f(0.6, 0.6, 0.6);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(x + 45 - 0.5, y, z - 0.5);
+	glVertex3f(x + 45 - 0.5, y, z + 45 - 0.5);
+	glVertex3f(x + 45 - 0.5, y + 100, z + 45 - 0.5);
+	glVertex3f(x + 45 - 0.5, y + 100, z - 0.5);
+	glEnd(); glColor3f(0.8, 0.8, 0.8);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(0, 0, 11 * i);
+			glBegin(GL_POLYGON);
+			glVertex3f(x + 45, y + 98, z + 2);
+			glVertex3f(x + 45, y + 98, z + 10);
+			glVertex3f(x + 45, y + 88, z + 10);
+			glVertex3f(x + 45, y + 88, z + 2);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}
+	glColor3f(0, 0, 0);
+	for (j = 0; j < 8; j++)
+	{
+
+		glPushMatrix();
+		glTranslatef(0, -12 * j, 0);
+		for (i = 0; i < 4; i++)
+		{
+			glPushMatrix();
+			glTranslatef(0, 0, 11 * i);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(x + 45, y + 98, z + 2);
+			glVertex3f(x + 45, y + 98, z + 10);
+			glVertex3f(x + 45, y + 88, z + 10);
+			glVertex3f(x + 45, y + 88, z + 2);
+			glEnd();
+			glPopMatrix();
+		}glPopMatrix();
+	}
+
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y, z - 0.5);
+	glVertex3f(x + 45, y, z - 0.5);
+	glVertex3f(x + 45, y, z + 45 - 0.5);
+	glVertex3f(x, y, z + 45 - 0.5);
+	glEnd();
+
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y + 100, z);
+	glVertex3f(x + 45, y + 100, z);
+	glVertex3f(x + 45, y + 100, z + 45);
+	glVertex3f(x, y + 100, z + 45);
+	glEnd();
+}
+
+void house(float x, float y, float z)
+{
+	glEnable(GL_TEXTURE_2D); // Activează utilizarea texturilor
+	glBindTexture(GL_TEXTURE_2D, buildingTexture); // Leagă textura clădirii
+
+	// Fața frontală
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
+	glEnd();
+
+	// Fața din spate
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + 45);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
+	glEnd();
+
+	// Fațele laterale
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 45, y, z);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z + 45);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D); // Dezactivează utilizarea texturilor
+}
+
+
+void house1()
+{
+
+	house(120, 0.1, 50);
+
+	house(120, 0.1, 90);
+
+	house(160, 0.1, 90);
+
+	house(80, 0.1, 90);
+
+	house(160, 0.1, 50);
+
+	house(80, 0.1, 50);
+
+	house(-130, 0.1, 120);
+
+	house(-130, 0.1, 160);
+
+	house(-90, 0.1, 120);
+
+	house(-60, 0.1, 120);
+
+	house(-90, 0.1, 160);
+
+	stand(-10, 6, 130);
+	stand(30, 6, 130);
+
+	house(-60, 0.1, 160);
+	apart(150, 0, -150);
+	apart(80, 0, -90);
+
+	apart(150, 0, -90);
+	apart(150, 0, -30);
+
+	apart(-150, 0, -30);
+	apart(-150, 0, -110);
+
+	apart(-150, 0, -180);
+
+}
+void circle1(float c[20][2])
+{
+	float x = 0, y = 03;
+	int i;
+	for (i = 0; i < 20; i++)
+	{
+		c[i][0] = x * cos((i + 1) * 36 * (3.142 / 360)) - y * sin((i + 1) * 36 * (3.142 / 360));
+		c[i][1] = x * sin((i + 1) * 36 * (3.142 / 360)) + y * cos((i + 1) * 36 * (3.142 / 360));
+	}
+
+	for (i = 0; i < 19; i++)
+	{
+		glBegin(GL_POLYGON);
+		glVertex3f(c[i][0], c[i][1], 0);
+		glVertex3f(c[i][0], c[i][1], 40);
+		glVertex3f(c[i + 1][0], c[i + 1][1], 40);
+		glVertex3f(c[i + 1][0], c[i + 1][1], 0);
+		glEnd();
+	}
+
+	glBegin(GL_POLYGON);
+	glVertex3f(c[0][0], c[0][1], 0);
+	glVertex3f(c[0][0], c[0][1], 40);
+	glVertex3f(c[19][0], c[19][1], 40);
+	glVertex3f(c[19][0], c[19][1], 0);
+	glEnd();
+
+}
+
+
+
+
+void draw_star(GLfloat x, GLfloat y)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_POLYGON);
+	glVertex2f(x, y);
+	glVertex2f(x + 1.5, y - 4);
+	glVertex2f(x + 6.5, y - 5.5);
+	glVertex2f(x + 2.5, y - 9);
+	glVertex2f(x + 4.5, y - 14);
+	glVertex2f(x, y - 11.5);
+	glVertex2f(x - 4.5, y - 14);
+	glVertex2f(x - 3, y - 9);
+	glVertex2f(x - 6.5, y - 5.5);
+	glVertex2f(x - 1.5, y - 5);
+	glVertex2f(x, y);
+	glEnd();
+}
+
+
+void stand(float x, float y, float z)
+{
+	glColor3f(1, 0.8, 0);
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y, z);
+	glVertex3f(x, y - h1, z + d1);
+	glVertex3f(x + h, y - h1, z + d1);
+	glVertex3f(x + h, y, z);
+	glEnd();
+	glColor3f(1, 0.5, 0);
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y, z);
+	glVertex3f(x + h, y, z);
+	glVertex3f(x + h, y - h1, z - d1);
+	glVertex3f(x, y - h1, z - d1);
+	glEnd();
+
+	glColor3f(0.6, 0.12, 0.4);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y - h1, z + d1);
+	glVertex3f(x, y - h1 - 2, z + d1);
+	glVertex3f(x + 1, y - h1 - 2, z + d1);
+	glVertex3f(x + 1, y - h1, z + d1);
+	glEnd();
+
+	glColor3f(0.6, 0.12, 0.4);
+	glBegin(GL_POLYGON);
+	glVertex3f(x + h, y - h1, z + d1);
+	glVertex3f(x + h, y - h1 - 2, z + d1);
+	glVertex3f(x + h - 1, y - h1 - 2, z + d1);
+	glVertex3f(x + h - 1, y - h1, z + d1);
+	glEnd();
+
+	glColor3f(0.6, 0.12, 0.4);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(x, y - h1, z - d1);
+	glVertex3f(x, y - h1 - 2, z - d1);
+	glVertex3f(x + 1, y - h1 - 2, z - d1);
+	glVertex3f(x + 1, y - h1, z - d1);
+	glEnd();
+
+	glColor3f(0.6, 0.12, 0.4);
+
+	glBegin(GL_POLYGON);
+	glVertex3f(x + h, y - h1, z - d1);
+	glVertex3f(x + h, y - h1 - 2, z - d1);
+	glVertex3f(x + h - 1, y - h1 - 2, z - d1);
+	glVertex3f(x + h - 1, y - h1, z - d1);
+	glEnd();
+}
+
+void display(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Aplicarea texturii cerului
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, skyTexture);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 0.0); glVertex3f(-200.0, 200.0, -200.0);
+	glTexCoord2f(1.0, 0.0); glVertex3f(200.0, 200.0, -200.0);
+	glTexCoord2f(1.0, 1.0); glVertex3f(200.0, 200.0, 200.0);
+	glTexCoord2f(0.0, 1.0); glVertex3f(-200.0, 200.0, 200.0);
+	glEnd();
+	glPopMatrix();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	/* draw the floor */
+	glBegin(GL_QUADS);
+	/*glColor3f(0.8, 0.6, 0.4);
+	glVertex3f(-200.0, 0.0, -200.0);
+	glColor3f(0.8, 0.6, 0.4);
+	glVertex3f(-200.0, 0.0, 200.0);
+	glColor3f(0.8, 0.6, 0.4);
+	glVertex3f(200.0, 0.0, 200.0);
+	glColor3f(0.8, 0.6, 0.4);
+	glVertex3f(200.0, 0.0, -200.0);*/
+	glEnd();
+	glFlush();
+	// Adaugă un copac
+	drawTree(50, 0, 0, 10, 2, 5); // Poziție (50, 0, 0), înălțime trunchi 10, rază trunchi 2, rază frunze 5
+
+	// Desenează cerul texturat
+	drawSky();
+	drawRoad(); // Desenează drumul
+	draw_star(20, 240);
+	draw_star(180, 220);
+	draw_star(-30, 280);
+	draw_star(190, 280);
+	draw_star(100, 220);
+	draw_star(-230, 250);
+	draw_star(-190, 210);
+	draw_star(-88, 260);
+	draw_star(88, 270);
+	draw_star(-170, 280);
+
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, 50);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, -40);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, 20);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, -10);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, -80);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, -120);
+	glutSolidCube(7);
+	glPopMatrix();
+
+	glColor3f(0.3, 0.015, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 1, -160);
+	glutSolidCube(7);
+	glPopMatrix();
+
+
+
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, 50);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 6);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, -40);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, 20);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, -10);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, -80);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, -120);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+	glColor3f(0.015, 0.3, 0.13);
+	glPushMatrix();
+	glTranslatef(-15, 24, -160);
+	glScalef(1.1, 2.3, 0.8);
+	glutSolidSphere(10, 15, 4);
+	glFlush();
+	glPopMatrix();
+
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(0, 0.01, -200); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(0, 0.01, 200);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(18, 0.01, 200);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(18, 0.01, -200);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(8.5, 0.02, -200); /* road */
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(8.5, 0.02, 200);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(9.5, 0.02, 200);
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex3f(9.5, 0.02, -200);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(44, 0.01, -200); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(44, 0.01, 160);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(54, 0.01, 160);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(54, 0.01, -200);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(54, 0.01, -180); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(54, 0.01, -160);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(200, 0.01, -160);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(200, 0.01, -180);
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(18, 0.01, 160); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(18, 0.01, 170);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(200, 0.01, 170);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(200, 0.01, 160);
+	glEnd();
+
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-200, 0.01, 90); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-200, 0.01, 100);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(0, 0.01, 100);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(0, 0.01, 90);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-90, 0.01, -200); /* road */
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-90, 0.01, 90);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-80, 0.01, 90);
+	glColor3f(0.2, 0.2, 0.2);
+	glVertex3f(-80, 0.01, -200);
+	glEnd();
+	house1();
+	glFlush();
+	glutSwapBuffers();
+
+
+}
+
+
+void keyboard(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 'a':
+	case 'A':
+		glTranslatef(5.0, 0.0, 0.0);
+		break;
+	case 'd':
+	case 'D':
+		glTranslatef(-5.0, 0.0, 0.0);
+		break;
+	case 'w':
+	case 'W':
+		glTranslatef(0.0, 0.0, 5.0);
+		break;
+	case 's':
+	case 'S':
+		glTranslatef(0.0, 0.0, -5.0);
+		break;
+	case 'q':
+	case 'Q':
+		glRotatef(-2, 1.0, 0.0, 0.0);
+
+	case 'e':
+	case 'E':
+		glRotatef(2, 0.0, 1.0, 0.0);
+
+	}
+	display();
+}
+
+
+void resize(int width, int height)
+{
+	if (height == 0) height = 1;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(80.0, width / height, 1.0, 600.0);
+
+	glTranslatef(0.0, -15.0, -320.0);
+
+	glMatrixMode(GL_MODELVIEW);
 }

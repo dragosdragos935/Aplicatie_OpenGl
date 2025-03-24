@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\drago\OneDrive\Desktop\SOIL-master\includes;C:\glew-2.1.0\include;C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\freeglut-3.6.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\drago\OneDrive\Desktop\SOIL-master\includes;C:\glew-2.1.0\include;C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\freeglut-3.6.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\glew-2.1.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
