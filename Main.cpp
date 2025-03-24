@@ -10,18 +10,10 @@ using namespace std;
 float cc[20][2];
 GLuint skyTexture;
 GLuint roadTexture;
-GLuint treeTextureTrunk;   // Textura pentru trunchiul copacului
-GLuint treeTextureLeaves;  // Textura pentru frunzele copacului
-GLuint trunkTexture;  // Textura pentru trunchiul copacului
+// Textura pentru trunchiul copacului
 
 
-// Funcție pentru încărcarea texturii trunchiului
-void loadTrunkTexture() {
-	trunkTexture = SOIL_load_OGL_texture("tree_trunk.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-	if (trunkTexture == 0) {
-		std::cout << "Eroare la încărcarea texturii trunchiului copacului!" << std::endl;
-	}
-}
+
 
 
 void init(void);
@@ -34,20 +26,44 @@ void apart(float, float, float);
 void circle1(float);
 void stand(float, float, float);
 float  h = 5, h1 = 6, d1 = 4, g = 1, g1 = 2;
-// Funcție pentru încărcarea texturilor pentru copaci
+
+
+GLuint treeTextureTrunk;   // Textura pentru trunchi
+GLuint treeTextureLeaves;  // Textura pentru frunze
+
 void loadTreeTexture() {
-	// Încărcăm textura pentru trunchiul copacului
-	treeTextureTrunk = SOIL_load_OGL_texture("tree_trunk.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	// Încarcă textura pentru trunchi
+	treeTextureTrunk = SOIL_load_OGL_texture(
+		"tree_trunk.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+	);
 	if (treeTextureTrunk == 0) {
-		std::cout << "Eroare la încărcarea texturii trunchiului copacului!" << std::endl;
+		std::cout << "Eroare la încărcarea texturii trunchiului!" << std::endl;
 	}
 
-	// Încărcăm textura pentru frunzele copacului
-	treeTextureLeaves = SOIL_load_OGL_texture("tree_leaves.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	// Încarcă textura pentru frunze
+	treeTextureLeaves = SOIL_load_OGL_texture(
+		"tree_leaves.jpg",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_INVERT_Y
+	);
 	if (treeTextureLeaves == 0) {
-		std::cout << "Eroare la încărcarea texturii frunzelor copacului!" << std::endl;
+		std::cout << "Eroare la încărcarea texturii frunzelor!" << std::endl;
 	}
+
+	// Setează parametri pentru texturi (opțional)
+	glBindTexture(GL_TEXTURE_2D, treeTextureTrunk);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, treeTextureLeaves);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
+
 void loadRoadTexture() {
 	roadTexture = SOIL_load_OGL_texture("road.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	if (roadTexture == 0) {
@@ -97,7 +113,7 @@ void init(void)
 	glBindTexture(GL_TEXTURE_2D, skyTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	   
 	int width, height;
 	unsigned char* image = SOIL_load_image("sky.jpg", &width, &height, 0, SOIL_LOAD_RGB);
 	if (image == NULL) {
@@ -123,39 +139,43 @@ void init(void)
 
 	// Încarcă textura pentru drum
 	loadRoadTexture();
-	loadTreeTexture();        // Texturile pentru copaci
-	loadTrunkTexture();  // Încărcăm textura trunchiului copacului
+	loadTreeTexture();
+  // Încărcăm textura trunchiului copacului
 }
-
-void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius)
-{
-	// Desenează trunchiul copacului
+void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius) {
+	// Desenează trunchiul (cilindru vertical)
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, treeTextureTrunk); // Textura pentru trunchi
+	glBindTexture(GL_TEXTURE_2D, treeTextureTrunk);
 
-	GLUquadricObj* quadric = gluNewQuadric();
-	gluQuadricTexture(quadric, GL_TRUE);
+	GLUquadricObj* trunkQuadric = gluNewQuadric();
+	gluQuadricTexture(trunkQuadric, GL_TRUE);
+
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	gluCylinder(quadric, trunkRadius, trunkRadius, trunkHeight, 20, 20); // Trunchiul copacului
+	glRotatef(-90, 1.0, 0.0, 0.0); // Rotire 90° pentru verticalitate
+	gluCylinder(trunkQuadric, trunkRadius, trunkRadius, trunkHeight, 20, 20);
 	glPopMatrix();
 
-	// Dezactivează textura pentru trunchi
+	gluDeleteQuadric(trunkQuadric);
 	glDisable(GL_TEXTURE_2D);
 
-	// Desenează frunzele copacului
+	// Desenează coroana (sferă mai mare cu textură)
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, treeTextureLeaves); // Textura pentru frunze
+	glBindTexture(GL_TEXTURE_2D, treeTextureLeaves);
+
+	GLUquadricObj* leavesQuadric = gluNewQuadric();
+	gluQuadricTexture(leavesQuadric, GL_TRUE); // Activează textura pe sferă
+	gluQuadricNormals(leavesQuadric, GLU_SMOOTH); // Pentru iluminare mai bună
 
 	glPushMatrix();
-	glTranslatef(x, y, z + trunkHeight); // Poziționează frunzele deasupra trunchiului
-	glutSolidSphere(leavesRadius, 20, 20); // Frunzele copacului
+	glTranslatef(x, y + trunkHeight, z);
+	glScalef(1.5, 1.5, 1.5); // Mărește sfera cu 50%
+	gluSphere(leavesQuadric, leavesRadius, 30, 30); // Rezoluție mai mare (30 segmente)
 	glPopMatrix();
 
-	// Dezactivează textura pentru frunze
+	gluDeleteQuadric(leavesQuadric);
 	glDisable(GL_TEXTURE_2D);
 }
-
 
 
 // Funcție pentru a desena o sferă pe care se aplică textura cerului
@@ -182,51 +202,6 @@ void drawSky()
 
 	// Dezactivăm texturarea
 	glDisable(GL_TEXTURE_2D);
-}
-
-void drawTrees() {
-	glEnable(GL_TEXTURE_2D);           // Activează texturarea
-	glBindTexture(GL_TEXTURE_2D, trunkTexture);  // Leagă textura de trunchiul copacului
-
-	GLUquadricObj* quadric = gluNewQuadric();  // Obiect pentru generarea geometriei
-
-	// Desenează fiecare cub pentru trunchi
-	glPushMatrix();
-	glTranslatef(-15, 1, 50);
-	glutSolidCube(7);  // Trunchiul copacului 1
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, -40);
-	glutSolidCube(7);  // Trunchiul copacului 2
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, 20);
-	glutSolidCube(7);  // Trunchiul copacului 3
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, -10);
-	glutSolidCube(7);  // Trunchiul copacului 4
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, -80);
-	glutSolidCube(7);  // Trunchiul copacului 5
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, -120);
-	glutSolidCube(7);  // Trunchiul copacului 6
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-15, 1, -160);
-	glutSolidCube(7);  // Trunchiul copacului 7
-	glPopMatrix();
-
-	glDisable(GL_TEXTURE_2D);          // Dezactivează texturarea
 }
 
 void drawRoad()
@@ -666,7 +641,7 @@ void display(void)
 	glEnd();
 	glFlush();
 	// Adaugă un copac
-	drawTree(50, 0, 0, 10, 2, 5); // Poziție (50, 0, 0), înălțime trunchi 10, rază trunchi 2, rază frunze 5
+ // Poziție (50, 0, 0), înălțime trunchi 10, rază trunchi 2, rază frunze 5
 
 	// Desenează cerul texturat
 	drawSky();
@@ -682,6 +657,28 @@ void display(void)
 	draw_star(88, 270);
 	draw_star(-170, 280);
 
+
+
+	// Copac 1 (înlocuiește cubul + sfera)
+	drawTree(-25, 1, 50, 20, 2.0, 5.0); // x, y, z, înălțime_trunchi, raza_trunchi, raza_frunze
+
+	// Copac 2
+	drawTree(-25, 1, -40, 20, 2.0, 5.0);
+
+	// Copac 3
+	drawTree(-25, 1, 20, 20, 2.0, 5.0);
+
+	// Copac 4
+	drawTree(-25, 1, -10, 20, 2.0, 5.0);
+
+	// Copac 5
+	drawTree(-25, 1, -80, 20, 2.0, 5.0);
+
+	// Copac 6
+	drawTree(-25, 1, -120, 20, 2.0, 5.0);
+
+	// Copac 7
+	drawTree(-25, 1, -160, 20, 2.0, 5.0);
 
 	glColor3f(0.3, 0.015, 0.13);
 	glPushMatrix();
