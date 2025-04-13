@@ -34,7 +34,13 @@ void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, f
 void displayInstructions(void);
 void renderText(float x, float y, const char* text);
 void loadBuildingTexture(void);
-void timer(int value);  // Declarația funcției timer
+void timer(int value);
+
+// Declarații pentru funcțiile de umbre
+void houseShadow(float x, float y, float z);
+void apartShadow(float x, float y, float z);
+void standShadow(float x, float y, float z);
+void house1Shadow(void);
 
 float  h = 5, h1 = 6, d1 = 4, g = 1, g1 = 2;
 
@@ -140,8 +146,8 @@ GLfloat lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 void init(void)
 {
-	// Setăm culoarea fundalului la albastru închis pentru cer nocturn
-	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+	// Setăm culoarea fundalului la albastru deschis
+	glClearColor(0.529f, 0.808f, 0.922f, 1.0f); // Culoare albastru cer deschis
 	
 	// Activăm testul de adâncime și normalizarea normalelor
     glEnable(GL_DEPTH_TEST);
@@ -165,7 +171,7 @@ void init(void)
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	
 	// Setăm lumina ambientală globală
-	GLfloat globalAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat globalAmbient[] = { 0.3f, 0.3f, 0.3f, 1.0f };  // Creștem lumina ambientală
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 	   
     // Încarcă toate texturile
@@ -217,27 +223,27 @@ void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, f
 // Funcție pentru a desena o sferă pe care se aplică textura cerului
 void drawSky()
 {
-	// Activăm texturarea
+	glPushMatrix();
+	glDisable(GL_LIGHTING);
+	
+	// Activăm texturarea și legăm textura cerului
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, skyTexture);  // Leagă textura "sky.jpg"
-
-	// Setează dimensiunea dreptunghiului cerului
-	GLfloat width = 1000.0f;  // Lățimea dreptunghiului
-	GLfloat height = 1000.0f; // Înălțimea dreptunghiului
-
-	// Desenăm dreptunghiul care reprezintă cerul
+	glBindTexture(GL_TEXTURE_2D, skyTexture);
+	
+	// Deplasăm cerul în spatele scenei
+	glTranslatef(0, 0, -200);
+	
+	// Desenăm un dreptunghi mare pentru cer
 	glBegin(GL_QUADS);
-
-	// Coordonate pentru texturare
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-width / 2, height / 2, -200.0f);  // Colțul stânga sus (aproape de cameră)
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(width / 2, height / 2, -200.0f);   // Colțul dreapta sus (aproape de cameră)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(width / 2, -height / 2, -200.0f);  // Colțul dreapta jos (aproape de cameră)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-width / 2, -height / 2, -200.0f); // Colțul stânga jos (aproape de cameră)
-
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-500, -200, 0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(500, -200, 0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(500, 500, 0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-500, 500, 0);
 	glEnd();
-
-	// Dezactivăm texturarea
+	
 	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 }
 
 void drawRoad()
@@ -264,242 +270,131 @@ void drawRoad()
 
 void apart(float x, float y, float z)
 {
-	int i;
-	int j;
-	glColor3f(0.7, 0.7, 0.7);
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y, z + 0.5);
-	glVertex3f(x + 45, y, z + 0.5);
-	glVertex3f(x + 45, y + 100, z + 0.5);
-	glVertex3f(x, y + 100, z + 0.5);
-	glEnd();  glColor3f(0.8, 0.8, 0.8);
-	for (j = 0; j < 8; j++)
-	{
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, buildingTexture);
+    
+    // Reset color to white to prevent any tinting of the texture
+    glColor3f(1.0, 1.0, 1.0);
 
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(11 * i, 0, 0);
-			glBegin(GL_POLYGON);
-			glVertex3f(x + 2, y + 98, z);
-			glVertex3f(x + 10, y + 98, z);
-			glVertex3f(x + 10, y + 88, z);
-			glVertex3f(x + 2, y + 88, z);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}glColor3f(0, 0, 0);
-	for (j = 0; j < 8; j++)
-	{
+    // Fața frontală
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + 0.5);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 0.5);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 0.5);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 0.5);
+    glEnd();
 
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(11 * i, 0, 0);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(x + 2, y + 98, z);
-			glVertex3f(x + 10, y + 98, z);
-			glVertex3f(x + 10, y + 88, z);
-			glVertex3f(x + 2, y + 88, z);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}
+    // Perete spate
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + 45 - 0.5);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45 - 0.5);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45 - 0.5);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 45 - 0.5);
+    glEnd();
 
-	glColor3f(0.6, 0.6, 0.6);
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y, z + 45 - 0.5);
-	glVertex3f(x + 45, y, z + 45 - 0.5);
-	glVertex3f(x + 45, y + 100, z + 45 - 0.5);
-	glVertex3f(x, y + 100, z + 45 - 0.5);
-	glEnd();  	glColor3f(0.8, 0.8, 0.8);
+    // Perete lateral stânga
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 0.5, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 0.5, y, z + 45);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 0.5, y + 100, z + 45);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + 0.5, y + 100, z);
+    glEnd();
 
-	for (j = 0; j < 8; j++)
-	{
+    // Perete lateral dreapta
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 45 - 0.5, y, z - 0.5);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45 - 0.5, y, z + 45 - 0.5);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45 - 0.5, y + 100, z + 45 - 0.5);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + 45 - 0.5, y + 100, z - 0.5);
+    glEnd();
 
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(11 * i, 0, 0);
-			glBegin(GL_POLYGON);
-			glVertex3f(x + 2, y + 98, z + 45);
-			glVertex3f(x + 10, y + 98, z + 45);
-			glVertex3f(x + 10, y + 88, z + 45);
-			glVertex3f(x + 2, y + 88, z + 45);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}glColor3f(0, 0, 0);
+    // Acoperiș
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y + 100, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y + 100, z);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
+    glEnd();
 
-	for (j = 0; j < 8; j++)
-	{
+    // Bază
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z - 0.5);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z - 0.5);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y, z + 45 - 0.5);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y, z + 45 - 0.5);
+    glEnd();
 
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(11 * i, 0, 0);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(x + 2, y + 98, z + 45);
-			glVertex3f(x + 10, y + 98, z + 45);
-			glVertex3f(x + 10, y + 88, z + 45);
-			glVertex3f(x + 2, y + 88, z + 45);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}
-
-	glColor3f(0.6, 0.6, 0.6);
-	glBegin(GL_POLYGON);
-	glVertex3f(x + 0.5, y, z);
-	glVertex3f(x + 0.5, y, z + 45);
-	glVertex3f(x + 0.5, y + 100, z + 45);
-	glVertex3f(x + 0.5, y + 100, z);
-	glEnd();
-	glColor3f(0.8, 0.8, 0.8);
-	for (j = 0; j < 8; j++)
-	{
-
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(0, 0, 11 * i);
-			glBegin(GL_POLYGON);
-			glVertex3f(x, y + 98, z + 2);
-			glVertex3f(x, y + 98, z + 10);
-			glVertex3f(x, y + 88, z + 10);
-			glVertex3f(x, y + 88, z + 2);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}glColor3f(0, 0, 0);
-	for (j = 0; j < 8; j++)
-	{
-
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(0, 0, 11 * i);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(x, y + 98, z + 2);
-			glVertex3f(x, y + 98, z + 10);
-			glVertex3f(x, y + 88, z + 10);
-			glVertex3f(x, y + 88, z + 2);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}
-
-	glColor3f(0.6, 0.6, 0.6);
-
-	glBegin(GL_POLYGON);
-	glVertex3f(x + 45 - 0.5, y, z - 0.5);
-	glVertex3f(x + 45 - 0.5, y, z + 45 - 0.5);
-	glVertex3f(x + 45 - 0.5, y + 100, z + 45 - 0.5);
-	glVertex3f(x + 45 - 0.5, y + 100, z - 0.5);
-	glEnd(); glColor3f(0.8, 0.8, 0.8);
-	for (j = 0; j < 8; j++)
-	{
-
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(0, 0, 11 * i);
-			glBegin(GL_POLYGON);
-			glVertex3f(x + 45, y + 98, z + 2);
-			glVertex3f(x + 45, y + 98, z + 10);
-			glVertex3f(x + 45, y + 88, z + 10);
-			glVertex3f(x + 45, y + 88, z + 2);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}
-	glColor3f(0, 0, 0);
-	for (j = 0; j < 8; j++)
-	{
-
-		glPushMatrix();
-		glTranslatef(0, -12 * j, 0);
-		for (i = 0; i < 4; i++)
-		{
-			glPushMatrix();
-			glTranslatef(0, 0, 11 * i);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(x + 45, y + 98, z + 2);
-			glVertex3f(x + 45, y + 98, z + 10);
-			glVertex3f(x + 45, y + 88, z + 10);
-			glVertex3f(x + 45, y + 88, z + 2);
-			glEnd();
-			glPopMatrix();
-		}glPopMatrix();
-	}
-
-	glColor3f(0.5, 0.5, 0.5);
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y, z - 0.5);
-	glVertex3f(x + 45, y, z - 0.5);
-	glVertex3f(x + 45, y, z + 45 - 0.5);
-	glVertex3f(x, y, z + 45 - 0.5);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y + 100, z);
-	glVertex3f(x + 45, y + 100, z);
-	glVertex3f(x + 45, y + 100, z + 45);
-	glVertex3f(x, y + 100, z + 45);
-	glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void house(float x, float y, float z)
 {
-	glEnable(GL_TEXTURE_2D); // Activează utilizarea texturilor
-	glBindTexture(GL_TEXTURE_2D, buildingTexture); // Leagă textura clădirii
+    glEnable(GL_TEXTURE_2D); // Activează utilizarea texturilor
+    glBindTexture(GL_TEXTURE_2D, buildingTexture); // Leagă textura clădirii
 
-	// Fața frontală
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
-	glEnd();
+    // Fața frontală
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
+    glEnd();
 
-	// Fața din spate
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + 45);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
-	glEnd();
+    // Fața din spate
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + 45);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
+    glEnd();
 
-	// Fațele laterale
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 45, y, z);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
-	glEnd();
+    // Fațele laterale
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 45, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y, z + 45);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 45, y + 100, z + 45);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + 45, y + 100, z);
+    glEnd();
 
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z + 45);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
-	glEnd();
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z + 45);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + 100, z + 45);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + 100, z);
+    glEnd();
 
-	glDisable(GL_TEXTURE_2D); // Dezactivează utilizarea texturilor
+    // Adăugăm acoperișul
+    float roofHeight = 15.0f; // Înălțimea acoperișului
+
+    // Partea din față a acoperișului
+    glBegin(GL_TRIANGLES);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y + 100, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y + 100, z);
+    glTexCoord2f(0.5f, 1.0f); glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    glEnd();
+
+    // Partea din spate a acoperișului
+    glBegin(GL_TRIANGLES);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y + 100, z + 45);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y + 100, z + 45);
+    glTexCoord2f(0.5f, 1.0f); glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    glEnd();
+
+    // Partea stângă a acoperișului
+    glBegin(GL_TRIANGLES);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y + 100, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y + 100, z + 45);
+    glTexCoord2f(0.5f, 1.0f); glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    glEnd();
+
+    // Partea dreaptă a acoperișului
+    glBegin(GL_TRIANGLES);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + 45, y + 100, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 45, y + 100, z + 45);
+    glTexCoord2f(0.5f, 1.0f); glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D); // Dezactivează utilizarea texturilor
 }
 
 
@@ -597,55 +492,56 @@ void draw_star(GLfloat x, GLfloat y)
 
 void stand(float x, float y, float z)
 {
-	glColor3f(1, 0.8, 0);
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y, z);
-	glVertex3f(x, y - h1, z + d1);
-	glVertex3f(x + h, y - h1, z + d1);
-	glVertex3f(x + h, y, z);
-	glEnd();
-	glColor3f(1, 0.5, 0);
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y, z);
-	glVertex3f(x + h, y, z);
-	glVertex3f(x + h, y - h1, z - d1);
-	glVertex3f(x, y - h1, z - d1);
-	glEnd();
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, buildingTexture);
+    glColor3f(1.0, 1.0, 1.0);  // Reset la alb pentru a evita tenta de culoare
 
-	glColor3f(0.6, 0.12, 0.4);
+    // Fața frontală
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y - h1, z + d1);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + h, y - h1, z + d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + h, y, z);
+    glEnd();
 
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y - h1, z + d1);
-	glVertex3f(x, y - h1 - 2, z + d1);
-	glVertex3f(x + 1, y - h1 - 2, z + d1);
-	glVertex3f(x + 1, y - h1, z + d1);
-	glEnd();
+    // Fața laterală
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + h, y, z);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + h, y - h1, z - d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y - h1, z - d1);
+    glEnd();
 
-	glColor3f(0.6, 0.12, 0.4);
-	glBegin(GL_POLYGON);
-	glVertex3f(x + h, y - h1, z + d1);
-	glVertex3f(x + h, y - h1 - 2, z + d1);
-	glVertex3f(x + h - 1, y - h1 - 2, z + d1);
-	glVertex3f(x + h - 1, y - h1, z + d1);
-	glEnd();
+    // Stâlpi de susținere
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y - h1, z + d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y - h1 - 2, z + d1);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 1, y - h1 - 2, z + d1);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 1, y - h1, z + d1);
+    glEnd();
 
-	glColor3f(0.6, 0.12, 0.4);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + h, y - h1, z + d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + h, y - h1 - 2, z + d1);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + h - 1, y - h1 - 2, z + d1);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + h - 1, y - h1, z + d1);
+    glEnd();
 
-	glBegin(GL_POLYGON);
-	glVertex3f(x, y - h1, z - d1);
-	glVertex3f(x, y - h1 - 2, z - d1);
-	glVertex3f(x + 1, y - h1 - 2, z - d1);
-	glVertex3f(x + 1, y - h1, z - d1);
-	glEnd();
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y - h1, z - d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y - h1 - 2, z - d1);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + 1, y - h1 - 2, z - d1);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + 1, y - h1, z - d1);
+    glEnd();
 
-	glColor3f(0.6, 0.12, 0.4);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(x + h, y - h1, z - d1);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(x + h, y - h1 - 2, z - d1);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(x + h - 1, y - h1 - 2, z - d1);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(x + h - 1, y - h1, z - d1);
+    glEnd();
 
-	glBegin(GL_POLYGON);
-	glVertex3f(x + h, y - h1, z - d1);
-	glVertex3f(x + h, y - h1 - 2, z - d1);
-	glVertex3f(x + h - 1, y - h1 - 2, z - d1);
-	glVertex3f(x + h - 1, y - h1, z - d1);
-	glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 // Funcție pentru afișarea textului pe ecran
@@ -698,6 +594,9 @@ void display(void)
     glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
     glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
     glTranslatef(-cameraX, -cameraY, -cameraZ);
+    
+    // Desenăm cerul primul
+    drawSky();
     
     // Actualizăm poziția luminii
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
@@ -820,44 +719,83 @@ void display(void)
     glutPostRedisplay();
 }
 
-// Funcție nouă pentru desenarea clădirilor cu umbre
-void drawBuildingsWithShadows()
-{
-    // Mai întâi desenăm clădirile normale
-    glEnable(GL_LIGHTING);
-    house1();
+// Funcție pentru desenarea obiectelor fără textură
+void drawWithoutTexture(void (*drawFunction)()) {
+    // Dezactivăm și blocăm textura
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     
-    // Apoi desenăm umbrele
+    // Forțăm culoarea neagră
+    glColor3f(0.0f, 0.0f, 0.0f);
+    
+    // Apelăm funcția de desenare
+    drawFunction();
+}
+
+void drawBlackShadow(void (*drawFunction)()) {
+    // Salvăm toate atributele OpenGL
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    
+    // Dezactivăm toate efectele care ar putea afecta culoarea umbrei
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glDisable(GL_ALPHA_TEST);
     
-    // Activăm blending pentru transparență
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // Forțăm culoarea neagră
+    glColor3f(0.0f, 0.0f, 0.0f);
     
-    // Matricea de proiecție pentru umbre
+    // Aplicăm matricea de umbre
     GLfloat shadowMat[16];
-    GLfloat groundPlane[] = { 0.0f, 1.0f, 0.0f, 0.0f }; // Planul Y = 0
-    
-    // Calculăm matricea de umbre
+    GLfloat groundPlane[] = { 0.0f, 1.0f, 0.0f, 0.01f };
     generateShadowMatrix(shadowMat, groundPlane, lightPosition);
     
     glPushMatrix();
     glMultMatrixf(shadowMat);
     
-    // Dezactivăm textura și setăm culoarea la negru complet
-    glDisable(GL_TEXTURE_2D);
-    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);  // Negru cu opacitate 50%
-    
-    // Desenăm umbrele
-    house1();
+    // Desenăm obiectul folosind wrapper-ul care forțează dezactivarea texturii
+    drawWithoutTexture(drawFunction);
     
     glPopMatrix();
     
     // Restaurăm starea OpenGL
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    glPopAttrib();
+}
+
+void drawBuildingsWithShadows()
+{
+    // Salvăm starea curentă OpenGL
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    
+    // Mai întâi desenăm clădirile normale
     glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0, 1.0, 1.0);
+    house1();
+    
+    // Apoi desenăm umbrele
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // Dezactivăm blending pentru umbre opace
+    
+    // Aplicăm matricea de umbre
+    GLfloat shadowMat[16];
+    GLfloat groundPlane[] = { 0.0f, 1.0f, 0.0f, 0.01f };
+    generateShadowMatrix(shadowMat, groundPlane, lightPosition);
+    
+    glPushMatrix();
+    glMultMatrixf(shadowMat);
+    
+    // Setăm culoarea neagră opacă pentru umbre
+    glColor3f(0.0f, 0.0f, 0.0f);
+    
+    // Desenăm umbrele folosind funcțiile speciale pentru umbre
+    house1Shadow();
+    
+    glPopMatrix();
+    
+    // Restaurăm starea OpenGL folosind stiva de atribute
+    glPopAttrib();
 }
 
 // Funcție pentru generarea matricei de umbre
@@ -996,4 +934,152 @@ void timer(int value) {
     
     glutPostRedisplay();  // Solicităm redesenarea scenei
     glutTimerFunc(16, timer, 0);  // Programăm următorul apel (aproximativ 60 FPS)
+}
+
+// Funcții pentru desenarea umbrelor fără texturi
+void houseShadow(float x, float y, float z)
+{
+    // Fața frontală
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z);
+    glVertex3f(x + 45, y, z);
+    glVertex3f(x + 45, y + 100, z);
+    glVertex3f(x, y + 100, z);
+    glEnd();
+
+    // Fața din spate
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z + 45);
+    glVertex3f(x + 45, y, z + 45);
+    glVertex3f(x + 45, y + 100, z + 45);
+    glVertex3f(x, y + 100, z + 45);
+    glEnd();
+
+    // Fațele laterale
+    glBegin(GL_QUADS);
+    glVertex3f(x + 45, y, z);
+    glVertex3f(x + 45, y, z + 45);
+    glVertex3f(x + 45, y + 100, z + 45);
+    glVertex3f(x + 45, y + 100, z);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z);
+    glVertex3f(x, y, z + 45);
+    glVertex3f(x, y + 100, z + 45);
+    glVertex3f(x, y + 100, z);
+    glEnd();
+
+    // Acoperișul
+    float roofHeight = 15.0f;
+    glBegin(GL_TRIANGLES);
+    glVertex3f(x, y + 100, z);
+    glVertex3f(x + 45, y + 100, z);
+    glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    
+    glVertex3f(x, y + 100, z + 45);
+    glVertex3f(x + 45, y + 100, z + 45);
+    glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    
+    glVertex3f(x, y + 100, z);
+    glVertex3f(x, y + 100, z + 45);
+    glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    
+    glVertex3f(x + 45, y + 100, z);
+    glVertex3f(x + 45, y + 100, z + 45);
+    glVertex3f(x + 22.5, y + 100 + roofHeight, z + 22.5);
+    glEnd();
+}
+
+void apartShadow(float x, float y, float z)
+{
+    // Fața frontală
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z + 0.5);
+    glVertex3f(x + 45, y, z + 0.5);
+    glVertex3f(x + 45, y + 100, z + 0.5);
+    glVertex3f(x, y + 100, z + 0.5);
+    glEnd();
+
+    // Perete spate
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z + 45 - 0.5);
+    glVertex3f(x + 45, y, z + 45 - 0.5);
+    glVertex3f(x + 45, y + 100, z + 45 - 0.5);
+    glVertex3f(x, y + 100, z + 45 - 0.5);
+    glEnd();
+
+    // Pereți laterali
+    glBegin(GL_QUADS);
+    glVertex3f(x + 0.5, y, z);
+    glVertex3f(x + 0.5, y, z + 45);
+    glVertex3f(x + 0.5, y + 100, z + 45);
+    glVertex3f(x + 0.5, y + 100, z);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex3f(x + 45 - 0.5, y, z - 0.5);
+    glVertex3f(x + 45 - 0.5, y, z + 45 - 0.5);
+    glVertex3f(x + 45 - 0.5, y + 100, z + 45 - 0.5);
+    glVertex3f(x + 45 - 0.5, y + 100, z - 0.5);
+    glEnd();
+}
+
+void standShadow(float x, float y, float z)
+{
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z);
+    glVertex3f(x, y - h1, z + d1);
+    glVertex3f(x + h, y - h1, z + d1);
+    glVertex3f(x + h, y, z);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex3f(x, y, z);
+    glVertex3f(x + h, y, z);
+    glVertex3f(x + h, y - h1, z - d1);
+    glVertex3f(x, y - h1, z - d1);
+    glEnd();
+
+    // Stâlpi
+    glBegin(GL_QUADS);
+    glVertex3f(x, y - h1, z + d1);
+    glVertex3f(x, y - h1 - 2, z + d1);
+    glVertex3f(x + 1, y - h1 - 2, z + d1);
+    glVertex3f(x + 1, y - h1, z + d1);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex3f(x + h, y - h1, z + d1);
+    glVertex3f(x + h, y - h1 - 2, z + d1);
+    glVertex3f(x + h - 1, y - h1 - 2, z + d1);
+    glVertex3f(x + h - 1, y - h1, z + d1);
+    glEnd();
+}
+
+void house1Shadow()
+{
+    houseShadow(120, 0.1, 50);
+    houseShadow(120, 0.1, 90);
+    houseShadow(160, 0.1, 90);
+    houseShadow(80, 0.1, 90);
+    houseShadow(160, 0.1, 50);
+    houseShadow(80, 0.1, 50);
+    houseShadow(-130, 0.1, 120);
+    houseShadow(-130, 0.1, 160);
+    houseShadow(-90, 0.1, 120);
+    houseShadow(-60, 0.1, 120);
+    houseShadow(-90, 0.1, 160);
+    houseShadow(-60, 0.1, 160);
+
+    standShadow(-10, 6, 130);
+    standShadow(30, 6, 130);
+
+    apartShadow(150, 0, -150);
+    apartShadow(80, 0, -90);
+    apartShadow(150, 0, -90);
+    apartShadow(150, 0, -30);
+    apartShadow(-150, 0, -30);
+    apartShadow(-150, 0, -110);
+    apartShadow(-150, 0, -180);
 }
