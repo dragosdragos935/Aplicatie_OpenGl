@@ -34,6 +34,7 @@ void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, f
 void displayInstructions(void);
 void renderText(float x, float y, const char* text);
 void loadBuildingTexture(void);
+void timer(int value);  // Declarația funcției timer
 
 float  h = 5, h1 = 6, d1 = 4, g = 1, g1 = 2;
 
@@ -84,6 +85,12 @@ void loadRoadTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
+
+// După declarațiile globale existente, adăugăm:
+float sunAngle = 0.0f;  // Unghiul soarelui
+float sunRadius = 200.0f;  // Raza cercului pe care se mișcă soarele
+float sunHeight = 200.0f;  // Înălțimea soarelui
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -97,10 +104,12 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(keyboard);
 
 	glutReshapeFunc(resize);
+	glutTimerFunc(0, timer, 0);  // Adăugăm timer-ul
 
 	glutMainLoop();
 	return 0;
 }
+
 GLuint buildingTexture;
 
 // În funcția de inițializare a texturii:
@@ -168,6 +177,7 @@ void init(void)
     // Activăm texturarea
     glEnable(GL_TEXTURE_2D);
 }
+
 void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius) {
 	// Desenează trunchiul (cilindru vertical)
 	glEnable(GL_TEXTURE_2D);
@@ -689,15 +699,15 @@ void display(void)
     glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
     glTranslatef(-cameraX, -cameraY, -cameraZ);
     
-    // Actualizăm poziția luminii și desenăm soarele
+    // Actualizăm poziția luminii
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     
-    // Desenăm soarele mai mare
+    // Desenăm soarele
     glPushMatrix();
     glDisable(GL_LIGHTING);
     glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
     glColor3f(1.0f, 1.0f, 0.0f);
-    glutSolidSphere(15.0f, 32, 32);  // Mărit dimensiunea soarelui
+    glutSolidSphere(15.0f, 32, 32);
     glEnable(GL_LIGHTING);
     glPopMatrix();
     
@@ -797,6 +807,17 @@ void display(void)
     displayInstructions();
     
     glutSwapBuffers();
+    
+    // Incrementăm unghiul soarelui
+    sunAngle += 0.01f;
+    if (sunAngle > 2 * PI) sunAngle -= 2 * PI;
+    
+    // Actualizăm poziția soarelui
+    lightPosition[0] = sunRadius * cos(sunAngle);
+    lightPosition[1] = sunHeight;
+    lightPosition[2] = sunRadius * sin(sunAngle);
+    
+    glutPostRedisplay();
 }
 
 // Funcție nouă pentru desenarea clădirilor cu umbre
@@ -826,7 +847,7 @@ void drawBuildingsWithShadows()
     
     // Dezactivăm textura și setăm culoarea la negru complet
     glDisable(GL_TEXTURE_2D);
-    glColor4f(0.0f, 0.0f, 0.0f, 1.0f);  // Negru complet, opacitate maximă
+    glColor4f(0.0f, 0.0f, 0.0f, 0.5f);  // Negru cu opacitate 50%
     
     // Desenăm umbrele
     house1();
@@ -958,4 +979,21 @@ void loadBuildingTexture() {
     glBindTexture(GL_TEXTURE_2D, buildingTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+// Implementarea funcției timer
+void timer(int value) {
+    // Incrementăm unghiul soarelui
+    sunAngle += 0.01f;
+    if (sunAngle > 2 * PI) {
+        sunAngle -= 2 * PI;
+    }
+    
+    // Actualizăm poziția soarelui
+    lightPosition[0] = sunRadius * cos(sunAngle);
+    lightPosition[1] = sunHeight;
+    lightPosition[2] = sunRadius * sin(sunAngle);
+    
+    glutPostRedisplay();  // Solicităm redesenarea scenei
+    glutTimerFunc(16, timer, 0);  // Programăm următorul apel (aproximativ 60 FPS)
 }

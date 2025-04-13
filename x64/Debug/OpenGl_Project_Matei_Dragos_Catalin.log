@@ -1,157 +1,159 @@
 ﻿  Main.cpp
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(54,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(65,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(81,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(110,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(259,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(259,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(259,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(261,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(262,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(263,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(264,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(265,32): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(265,27): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(265,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(270,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(274,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(288,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(292,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(303,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(303,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(303,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(305,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(306,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(307,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(308,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(309,33): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(309,28): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(309,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(315,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(319,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(334,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(338,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(349,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(349,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(349,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(351,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(352,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(353,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(354,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(356,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(356,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(356,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(361,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(365,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(379,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(383,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(394,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(394,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(394,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(397,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(397,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(398,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(398,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(399,43): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(399,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(400,38): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(400,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(401,31): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(401,26): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(401,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(406,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(410,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(425,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(429,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(442,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(443,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(444,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(445,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(499,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(501,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(503,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(505,12): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(507,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(509,12): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(511,14): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(513,14): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(515,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(55,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(66,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(82,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(119,16): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(269,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(269,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(269,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(271,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(272,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(273,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(274,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(275,32): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(275,27): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(275,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(280,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(284,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(298,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(302,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(313,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(313,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(313,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(315,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(316,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(317,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(318,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(319,33): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(319,28): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(319,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(325,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(329,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(344,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(348,20): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(359,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(359,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(359,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(361,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(362,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(363,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(364,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(366,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(366,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(366,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(371,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(375,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(389,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(393,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(404,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(404,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(404,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(407,32): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(407,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(408,37): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(408,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(409,43): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(409,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(410,38): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(410,20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(411,31): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(411,26): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(411,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(416,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(420,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(435,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(439,26): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(452,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(453,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(454,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(455,26): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(509,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(511,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(513,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(515,12): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(517,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(519,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(524,13): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(543,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(544,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(574,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(575,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(575,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(576,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(577,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(578,18): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(579,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(581,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(581,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(582,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(590,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(605,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(605,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(605,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(614,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(614,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(614,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(622,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(622,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(622,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(631,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(631,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(631,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(740,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(740,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(740,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(741,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(742,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(743,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(744,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(749,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(750,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(751,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(752,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(756,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(756,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(756,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(757,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(758,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(759,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(760,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(764,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(764,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(764,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(765,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(519,12): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(521,14): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(523,14): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(525,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(527,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(529,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(534,13): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(553,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(554,51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(584,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(585,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(585,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(586,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(587,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(588,18): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(589,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(591,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(591,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(592,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(600,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(615,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(615,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(615,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(624,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(624,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(624,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(632,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(632,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(632,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(641,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(641,17): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(641,12): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(750,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(750,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(750,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(751,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(752,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(753,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(754,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(759,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(760,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(761,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(762,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(766,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
 C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(766,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(767,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(768,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(772,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(772,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(772,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(773,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(766,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(767,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(768,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(769,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(770,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(774,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
 C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(774,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(775,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(776,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(780,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(780,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(780,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(781,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(782,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(783,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(784,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(788,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(788,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(788,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(789,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(790,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(791,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(792,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(876,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(955,22): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(774,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(775,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(776,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(777,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(778,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(782,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(782,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(782,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(783,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(784,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(785,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(786,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(790,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(790,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(790,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(791,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(792,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(793,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(794,19): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(798,25): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(798,20): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(798,15): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(799,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(800,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(801,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(802,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(813,42): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(897,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(976,22): warning C4566: character represented by universal-character-name '\u0103' cannot be represented in the current code page (1252)
+C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\OpenGl_Project_Matei_Dragos_Catalin\Main.cpp(989,23): warning C4305: '-=': truncation from 'double' to 'float'
   OpenGl_Project_Matei_Dragos_Catalin.vcxproj -> C:\Users\drago\source\repos\OpenGl_Project_Matei_Dragos_Catalin\x64\Debug\OpenGl_Project_Matei_Dragos_Catalin.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
