@@ -103,11 +103,38 @@ void loadSkyTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
+// Camera position and orientation
+float cameraX = 0.0f;
+float cameraY = 5.0f;
+float cameraZ = 20.0f;
+float cameraRotX = 0.0f;
+float cameraRotY = 0.0f;
+float cameraRotZ = 0.0f;
+
+// Light position and properties
+GLfloat lightPos[] = { 50.0f, 100.0f, 50.0f, 1.0f };
+GLfloat lightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+GLfloat lightDiff[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat lightSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 void init(void)
 {
-	glEnable(GL_DEPTH_TEST); // Activează testul de adâncime
-	glMatrixMode(GL_MODELVIEW); // Activează modul de vizualizare a obiectelor
-
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);     // Enable lighting
+	glEnable(GL_LIGHT0);       // Enable light #0
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_NORMALIZE);    // Automatically normalize normals
+	
+	// Setup light 0
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
+	
+	// Enable shadow mapping
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	
 	// Încarcă textura cerului
 	glGenTextures(1, &skyTexture);
 	glBindTexture(GL_TEXTURE_2D, skyTexture);
@@ -612,10 +639,60 @@ void stand(float x, float y, float z)
 	glEnd();
 }
 
+// Funcție pentru afișarea textului pe ecran
+void renderText(float x, float y, const char* text) {
+    glDisable(GL_LIGHTING);  // Dezactivăm iluminarea pentru text
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0.0, glutGet(GLUT_WINDOW_WIDTH), 0.0, glutGet(GLUT_WINDOW_HEIGHT));
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    glColor3f(1.0f, 1.0f, 1.0f);  // Text alb
+    glRasterPos2f(x, y);
+    
+    for (const char* c = text; *c != '\0'; c++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+    }
+    
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_LIGHTING);  // Reactivăm iluminarea
+}
+
+void displayInstructions() {
+    float startX = 10.0f;
+    float startY = glutGet(GLUT_WINDOW_HEIGHT) - 20.0f;
+    float lineSpacing = 15.0f;
+    
+    renderText(startX, startY, "Instructiuni control camera:");
+    renderText(startX, startY - lineSpacing, "W/S - Deplasare inainte/inapoi");
+    renderText(startX, startY - 2 * lineSpacing, "A/D - Deplasare stanga/dreapta");
+    renderText(startX, startY - 3 * lineSpacing, "Q/E - Deplasare sus/jos");
+    renderText(startX, startY - 4 * lineSpacing, "I/K - Rotatie sus/jos");
+    renderText(startX, startY - 5 * lineSpacing, "J/L - Rotatie stanga/dreapta");
+    renderText(startX, startY - 6 * lineSpacing, "U/O - Rotatie in sensul/invers acelor de ceasornic");
+    renderText(startX, startY - 7 * lineSpacing, "R - Resetare pozitie camera");
+}
+
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glLoadIdentity();
+	
+	// Apply camera transformations
+	glRotatef(cameraRotX, 1.0f, 0.0f, 0.0f);
+	glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
+	glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-cameraX, -cameraY, -cameraZ);
+	
+	// Update light position
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	
 	// Aplicarea texturii cerului
 	glPushMatrix();
 	glBindTexture(GL_TEXTURE_2D, skyTexture);
@@ -862,42 +939,48 @@ void display(void)
 	glEnd();
 	house1();
 	glFlush();
+
+	// Afișăm instrucțiunile la sfârșitul funcției display
+	displayInstructions();
+	
 	glutSwapBuffers();
-
-
 }
 
 
 void keyboard(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
-	case 'a':
-	case 'A':
-		glTranslatef(5.0, 0.0, 0.0);
-		break;
-	case 'd':
-	case 'D':
-		glTranslatef(-5.0, 0.0, 0.0);
-		break;
-	case 'w':
-	case 'W':
-		glTranslatef(0.0, 0.0, 5.0);
-		break;
-	case 's':
-	case 'S':
-		glTranslatef(0.0, 0.0, -5.0);
-		break;
-	case 'q':
-	case 'Q':
-		glRotatef(-2, 1.0, 0.0, 0.0);
-
-	case 'e':
-	case 'E':
-		glRotatef(2, 0.0, 1.0, 0.0);
-
+	float moveSpeed = 1.0f;
+	float rotateSpeed = 5.0f;
+	
+	switch(key) {
+		// Camera movement
+		case 'w': cameraZ -= moveSpeed; break;
+		case 's': cameraZ += moveSpeed; break;
+		case 'a': cameraX -= moveSpeed; break;
+		case 'd': cameraX += moveSpeed; break;
+		case 'q': cameraY += moveSpeed; break;
+		case 'e': cameraY -= moveSpeed; break;
+		
+		// Camera rotation
+		case 'i': cameraRotX += rotateSpeed; break;
+		case 'k': cameraRotX -= rotateSpeed; break;
+		case 'j': cameraRotY -= rotateSpeed; break;
+		case 'l': cameraRotY += rotateSpeed; break;
+		case 'u': cameraRotZ += rotateSpeed; break;
+		case 'o': cameraRotZ -= rotateSpeed; break;
+		
+		// Reset camera
+		case 'r':
+			cameraX = 0.0f;
+			cameraY = 5.0f;
+			cameraZ = 20.0f;
+			cameraRotX = 0.0f;
+			cameraRotY = 0.0f;
+			cameraRotZ = 0.0f;
+			break;
 	}
-	display();
+	
+	glutPostRedisplay();
 }
 
 
