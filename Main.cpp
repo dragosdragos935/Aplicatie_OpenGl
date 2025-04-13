@@ -4,18 +4,15 @@
 #include <iostream>
 #include <SOIL/SOIL.h>
 
+#define PI 3.14159265358979323846
 
 using namespace std;
 
 float cc[20][2];
 GLuint skyTexture;
 GLuint roadTexture;
-// Textura pentru trunchiul copacului
 
-
-
-
-
+// Declarații funcții
 void init(void);
 void display(void);
 void keyboard(unsigned char, int, int);
@@ -25,8 +22,22 @@ void house(float, float, float);
 void apart(float, float, float);
 void circle1(float);
 void stand(float, float, float);
+void drawBuildingsWithShadows(void);
+void generateShadowMatrix(GLfloat shadowMat[16], GLfloat groundPlane[4], GLfloat lightPos[4]);
+void house1(void);
+void drawSky(void);
+void drawRoad(void);
+void loadTreeTexture(void);
+void loadRoadTexture(void);
+void loadSkyTexture(void);
+void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius);
+void displayInstructions(void);
+void renderText(float x, float y, const char* text);
+void loadBuildingTexture(void);
+
 float  h = 5, h1 = 6, d1 = 4, g = 1, g1 = 2;
 
+// Textura pentru trunchiul copacului
 
 GLuint treeTextureTrunk;   // Textura pentru trunchi
 GLuint treeTextureLeaves;  // Textura pentru frunze
@@ -94,7 +105,7 @@ GLuint buildingTexture;
 
 // În funcția de inițializare a texturii:
 void loadSkyTexture() {
-	skyTexture = SOIL_load_OGL_texture("path_to_sky_texture.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	skyTexture = SOIL_load_OGL_texture("sky.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	if (skyTexture == 0) {
 		std::cout << "Eroare la încărcarea texturii cerului!" << std::endl;
 	}
@@ -103,71 +114,59 @@ void loadSkyTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-// Camera position and orientation
+// Variabile pentru cameră
 float cameraX = 0.0f;
 float cameraY = 5.0f;
 float cameraZ = 20.0f;
 float cameraRotX = 0.0f;
 float cameraRotY = 0.0f;
 float cameraRotZ = 0.0f;
+float moveSpeed = 2.0f;
 
-// Light position and properties
-GLfloat lightPos[] = { 50.0f, 100.0f, 50.0f, 1.0f };
-GLfloat lightAmb[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-GLfloat lightDiff[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat lightSpec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+// Proprietăți lumină
+GLfloat lightPosition[] = { 50.0f, 200.0f, 50.0f, 1.0f };  // Am mutat soarele mai sus
+GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+GLfloat lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 void init(void)
 {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);     // Enable lighting
-	glEnable(GL_LIGHT0);       // Enable light #0
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_NORMALIZE);    // Automatically normalize normals
+	// Setăm culoarea fundalului la albastru închis pentru cer nocturn
+	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 	
-	// Setup light 0
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
+	// Activăm testul de adâncime și normalizarea normalelor
+    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
+    
+	// Activăm și configurăm iluminarea
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    
+	// Setăm proprietățile luminii
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 	
-	// Enable shadow mapping
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	// Activăm materiale și culori
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    
+	// Setăm modelul de iluminare pentru două fețe
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	
-	// Încarcă textura cerului
-	glGenTextures(1, &skyTexture);
-	glBindTexture(GL_TEXTURE_2D, skyTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Setăm lumina ambientală globală
+	GLfloat globalAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 	   
-	int width, height;
-	unsigned char* image = SOIL_load_image("sky.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	if (image == NULL) {
-		std::cout << "Eroare la încărcarea imaginii cerului!" << std::endl;
-		return;
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	SOIL_free_image_data(image);
+    // Încarcă toate texturile
+    loadSkyTexture();
+    loadRoadTexture();
+    loadTreeTexture();
+    loadBuildingTexture();
 
-	// Încarcă textura pentru clădiri
-	glGenTextures(1, &buildingTexture);
-	glBindTexture(GL_TEXTURE_2D, buildingTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	image = SOIL_load_image("building.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	if (image == NULL) {
-		std::cout << "Eroare la încărcarea imaginii clădirii!" << std::endl;
-		return;
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	SOIL_free_image_data(image);
-
-	// Încarcă textura pentru drum
-	loadRoadTexture();
-	loadTreeTexture();
-  // Încărcăm textura trunchiului copacului
+    // Activăm texturarea
+    glEnable(GL_TEXTURE_2D);
 }
 void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius) {
 	// Desenează trunchiul (cilindru vertical)
@@ -681,319 +680,282 @@ void displayInstructions() {
 
 void display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	
-	// Apply camera transformations
-	glRotatef(cameraRotX, 1.0f, 0.0f, 0.0f);
-	glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
-	glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
-	glTranslatef(-cameraX, -cameraY, -cameraZ);
-	
-	// Update light position
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-	
-	// Aplicarea texturii cerului
-	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, skyTexture);
-	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 0.0); glVertex3f(-200.0, 200.0, -200.0);
-	glTexCoord2f(1.0, 0.0); glVertex3f(200.0, 200.0, -200.0);
-	glTexCoord2f(1.0, 1.0); glVertex3f(200.0, 200.0, 200.0);
-	glTexCoord2f(0.0, 1.0); glVertex3f(-200.0, 200.0, 200.0);
-	glEnd();
-	glPopMatrix();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    // Aplicăm transformările camerei
+    glRotatef(cameraRotX, 1.0f, 0.0f, 0.0f);
+    glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
+    glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-cameraX, -cameraY, -cameraZ);
+    
+    // Actualizăm poziția luminii și desenăm soarele
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    
+    // Desenăm soarele mai mare
+    glPushMatrix();
+    glDisable(GL_LIGHTING);
+    glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glutSolidSphere(15.0f, 32, 32);  // Mărit dimensiunea soarelui
+    glEnable(GL_LIGHTING);
+    glPopMatrix();
+    
+    // Desenăm stelele
+    glDisable(GL_LIGHTING);
+    draw_star(20, 240);
+    draw_star(180, 220);
+    draw_star(-30, 280);
+    draw_star(190, 280);
+    draw_star(100, 220);
+    draw_star(-230, 250);
+    draw_star(-190, 210);
+    draw_star(-88, 260);
+    draw_star(88, 270);
+    draw_star(-170, 280);
+    glEnable(GL_LIGHTING);
+    
+    // Desenăm clădirile cu umbre
+    drawBuildingsWithShadows();
+    
+    // Desenăm drumul
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    drawRoad();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+    
+    // Desenăm copacii
+    drawTree(-25, 1, 50, 20, 2.0, 5.0);
+    drawTree(-25, 1, -40, 20, 2.0, 5.0);
+    drawTree(-25, 1, 20, 20, 2.0, 5.0);
+    drawTree(-25, 1, -10, 20, 2.0, 5.0);
+    drawTree(-25, 1, -80, 20, 2.0, 5.0);
+    drawTree(-25, 1, -120, 20, 2.0, 5.0);
+    drawTree(-25, 1, -160, 20, 2.0, 5.0);
+    
+    // Desenăm drumurile
+    glDisable(GL_LIGHTING);
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(0, 0.01, -200);
+    glVertex3f(0, 0.01, 200);
+    glVertex3f(18, 0.01, 200);
+    glVertex3f(18, 0.01, -200);
+    glEnd();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	/* draw the floor */
-	glBegin(GL_QUADS);
-	/*glColor3f(0.8, 0.6, 0.4);
-	glVertex3f(-200.0, 0.0, -200.0);
-	glColor3f(0.8, 0.6, 0.4);
-	glVertex3f(-200.0, 0.0, 200.0);
-	glColor3f(0.8, 0.6, 0.4);
-	glVertex3f(200.0, 0.0, 200.0);
-	glColor3f(0.8, 0.6, 0.4);
-	glVertex3f(200.0, 0.0, -200.0);*/
-	glEnd();
-	glFlush();
-	// Adaugă un copac
- // Poziție (50, 0, 0), înălțime trunchi 10, rază trunchi 2, rază frunze 5
+    glBegin(GL_QUADS);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(8.5, 0.02, -200);
+    glVertex3f(8.5, 0.02, 200);
+    glVertex3f(9.5, 0.02, 200);
+    glVertex3f(9.5, 0.02, -200);
+    glEnd();
 
-	// Desenează cerul texturat
-	drawSky();
-	drawRoad(); // Desenează drumul
-	draw_star(20, 240);
-	draw_star(180, 220);
-	draw_star(-30, 280);
-	draw_star(190, 280);
-	draw_star(100, 220);
-	draw_star(-230, 250);
-	draw_star(-190, 210);
-	draw_star(-88, 260);
-	draw_star(88, 270);
-	draw_star(-170, 280);
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(44, 0.01, -200);
+    glVertex3f(44, 0.01, 160);
+    glVertex3f(54, 0.01, 160);
+    glVertex3f(54, 0.01, -200);
+    glEnd();
 
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(54, 0.01, -180);
+    glVertex3f(54, 0.01, -160);
+    glVertex3f(200, 0.01, -160);
+    glVertex3f(200, 0.01, -180);
+    glEnd();
 
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(18, 0.01, 160);
+    glVertex3f(18, 0.01, 170);
+    glVertex3f(200, 0.01, 170);
+    glVertex3f(200, 0.01, 160);
+    glEnd();
 
-	// Copac 1 (înlocuiește cubul + sfera)
-	drawTree(-25, 1, 50, 20, 2.0, 5.0); // x, y, z, înălțime_trunchi, raza_trunchi, raza_frunze
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(-200, 0.01, 90);
+    glVertex3f(-200, 0.01, 100);
+    glVertex3f(0, 0.01, 100);
+    glVertex3f(0, 0.01, 90);
+    glEnd();
 
-	// Copac 2
-	drawTree(-25, 1, -40, 20, 2.0, 5.0);
-
-	// Copac 3
-	drawTree(-25, 1, 20, 20, 2.0, 5.0);
-
-	// Copac 4
-	drawTree(-25, 1, -10, 20, 2.0, 5.0);
-
-	// Copac 5
-	drawTree(-25, 1, -80, 20, 2.0, 5.0);
-
-	// Copac 6
-	drawTree(-25, 1, -120, 20, 2.0, 5.0);
-
-	// Copac 7
-	drawTree(-25, 1, -160, 20, 2.0, 5.0);
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, 50);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, -40);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, 20);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, -10);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, -80);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, -120);
-	glutSolidCube(7);
-	glPopMatrix();
-
-	glColor3f(0.3, 0.015, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 1, -160);
-	glutSolidCube(7);
-	glPopMatrix();
-
-
-
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, 50);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 6);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, -40);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, 20);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, -10);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, -80);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, -120);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-	glColor3f(0.015, 0.3, 0.13);
-	glPushMatrix();
-	glTranslatef(-15, 24, -160);
-	glScalef(1.1, 2.3, 0.8);
-	glutSolidSphere(10, 15, 4);
-	glFlush();
-	glPopMatrix();
-
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(0, 0.01, -200); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(0, 0.01, 200);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(18, 0.01, 200);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(18, 0.01, -200);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3f(1.0, 1.0, 1.0);
-	glVertex3f(8.5, 0.02, -200); /* road */
-	glColor3f(1.0, 1.0, 1.0);
-	glVertex3f(8.5, 0.02, 200);
-	glColor3f(1.0, 1.0, 1.0);
-	glVertex3f(9.5, 0.02, 200);
-	glColor3f(1.0, 1.0, 1.0);
-	glVertex3f(9.5, 0.02, -200);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(44, 0.01, -200); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(44, 0.01, 160);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(54, 0.01, 160);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(54, 0.01, -200);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(54, 0.01, -180); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(54, 0.01, -160);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(200, 0.01, -160);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(200, 0.01, -180);
-	glEnd();
-
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(18, 0.01, 160); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(18, 0.01, 170);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(200, 0.01, 170);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(200, 0.01, 160);
-	glEnd();
-
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-200, 0.01, 90); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-200, 0.01, 100);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(0, 0.01, 100);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(0, 0.01, 90);
-	glEnd();
-
-	glBegin(GL_QUADS);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-90, 0.01, -200); /* road */
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-90, 0.01, 90);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-80, 0.01, 90);
-	glColor3f(0.2, 0.2, 0.2);
-	glVertex3f(-80, 0.01, -200);
-	glEnd();
-	house1();
-	glFlush();
-
-	// Afișăm instrucțiunile la sfârșitul funcției display
-	displayInstructions();
-	
-	glutSwapBuffers();
+    glBegin(GL_QUADS);
+    glColor3f(0.2, 0.2, 0.2);
+    glVertex3f(-90, 0.01, -200);
+    glVertex3f(-90, 0.01, 90);
+    glVertex3f(-80, 0.01, 90);
+    glVertex3f(-80, 0.01, -200);
+    glEnd();
+    glEnable(GL_LIGHTING);
+    
+    // Afișăm instrucțiunile
+    displayInstructions();
+    
+    glutSwapBuffers();
 }
 
+// Funcție nouă pentru desenarea clădirilor cu umbre
+void drawBuildingsWithShadows()
+{
+    // Mai întâi desenăm clădirile normale
+    glEnable(GL_LIGHTING);
+    house1();
+    
+    // Apoi desenăm umbrele
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    
+    // Activăm blending pentru transparență
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // Matricea de proiecție pentru umbre
+    GLfloat shadowMat[16];
+    GLfloat groundPlane[] = { 0.0f, 1.0f, 0.0f, 0.0f }; // Planul Y = 0
+    
+    // Calculăm matricea de umbre
+    generateShadowMatrix(shadowMat, groundPlane, lightPosition);
+    
+    glPushMatrix();
+    glMultMatrixf(shadowMat);
+    
+    // Dezactivăm textura și setăm culoarea la negru complet
+    glDisable(GL_TEXTURE_2D);
+    glColor4f(0.0f, 0.0f, 0.0f, 1.0f);  // Negru complet, opacitate maximă
+    
+    // Desenăm umbrele
+    house1();
+    
+    glPopMatrix();
+    
+    // Restaurăm starea OpenGL
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+}
+
+// Funcție pentru generarea matricei de umbre
+void generateShadowMatrix(GLfloat shadowMat[16], GLfloat groundPlane[4], GLfloat lightPos[4])
+{
+	GLfloat dot = groundPlane[0] * lightPos[0] +
+				  groundPlane[1] * lightPos[1] +
+				  groundPlane[2] * lightPos[2] +
+				  groundPlane[3] * lightPos[3];
+	
+	shadowMat[0]  = dot - lightPos[0] * groundPlane[0];
+	shadowMat[4]  = 0.f - lightPos[0] * groundPlane[1];
+	shadowMat[8]  = 0.f - lightPos[0] * groundPlane[2];
+	shadowMat[12] = 0.f - lightPos[0] * groundPlane[3];
+	
+	shadowMat[1]  = 0.f - lightPos[1] * groundPlane[0];
+	shadowMat[5]  = dot - lightPos[1] * groundPlane[1];
+	shadowMat[9]  = 0.f - lightPos[1] * groundPlane[2];
+	shadowMat[13] = 0.f - lightPos[1] * groundPlane[3];
+	
+	shadowMat[2]  = 0.f - lightPos[2] * groundPlane[0];
+	shadowMat[6]  = 0.f - lightPos[2] * groundPlane[1];
+	shadowMat[10] = dot - lightPos[2] * groundPlane[2];
+	shadowMat[14] = 0.f - lightPos[2] * groundPlane[3];
+	
+	shadowMat[3]  = 0.f - lightPos[3] * groundPlane[0];
+	shadowMat[7]  = 0.f - lightPos[3] * groundPlane[1];
+	shadowMat[11] = 0.f - lightPos[3] * groundPlane[2];
+	shadowMat[15] = dot - lightPos[3] * groundPlane[3];
+}
 
 void keyboard(unsigned char key, int x, int y)
 {
-	float moveSpeed = 1.0f;
-	float rotateSpeed = 5.0f;
-	
-	switch(key) {
-		// Camera movement
-		case 'w': cameraZ -= moveSpeed; break;
-		case 's': cameraZ += moveSpeed; break;
-		case 'a': cameraX -= moveSpeed; break;
-		case 'd': cameraX += moveSpeed; break;
-		case 'q': cameraY += moveSpeed; break;
-		case 'e': cameraY -= moveSpeed; break;
-		
-		// Camera rotation
-		case 'i': cameraRotX += rotateSpeed; break;
-		case 'k': cameraRotX -= rotateSpeed; break;
-		case 'j': cameraRotY -= rotateSpeed; break;
-		case 'l': cameraRotY += rotateSpeed; break;
-		case 'u': cameraRotZ += rotateSpeed; break;
-		case 'o': cameraRotZ -= rotateSpeed; break;
-		
-		// Reset camera
-		case 'r':
-			cameraX = 0.0f;
-			cameraY = 5.0f;
-			cameraZ = 20.0f;
-			cameraRotX = 0.0f;
-			cameraRotY = 0.0f;
-			cameraRotZ = 0.0f;
-			break;
-	}
-	
-	glutPostRedisplay();
+    float rotationSpeed = 2.0f;
+    
+    // Calculăm direcția de deplasare bazată pe rotația camerei
+    float radY = cameraRotY * PI / 180.0f;
+    float forwardX = sin(radY);
+    float forwardZ = -cos(radY);
+    float rightX = cos(radY);
+    float rightZ = sin(radY);
+    
+    switch(key) {
+        // Deplasare înainte/înapoi
+        case 'w':
+            cameraX += forwardX * moveSpeed;
+            cameraZ += forwardZ * moveSpeed;
+            break;
+        case 's':
+            cameraX -= forwardX * moveSpeed;
+            cameraZ -= forwardZ * moveSpeed;
+            break;
+            
+        // Deplasare stânga/dreapta
+        case 'a':
+            cameraX -= rightX * moveSpeed;
+            cameraZ -= rightZ * moveSpeed;
+            break;
+        case 'd':
+            cameraX += rightX * moveSpeed;
+            cameraZ += rightZ * moveSpeed;
+            break;
+            
+        // Deplasare sus/jos
+        case 'q': cameraY += moveSpeed; break;
+        case 'e': cameraY -= moveSpeed; break;
+            
+        // Rotație sus/jos
+        case 'i': cameraRotX += rotationSpeed; break;
+        case 'k': cameraRotX -= rotationSpeed; break;
+            
+        // Rotație stânga/dreapta
+        case 'j': cameraRotY -= rotationSpeed; break;
+        case 'l': cameraRotY += rotationSpeed; break;
+            
+        // Rotație în jurul axei Z
+        case 'u': cameraRotZ += rotationSpeed; break;
+        case 'o': cameraRotZ -= rotationSpeed; break;
+            
+        // Resetare cameră
+        case 'r':
+            cameraX = 0.0f;
+            cameraY = 5.0f;
+            cameraZ = 20.0f;
+            cameraRotX = 0.0f;
+            cameraRotY = 0.0f;
+            cameraRotZ = 0.0f;
+            break;
+    }
+    
+    glutPostRedisplay();
 }
 
 
 void resize(int width, int height)
 {
-	if (height == 0) height = 1;
+    if (height == 0) height = 1;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
-	gluPerspective(80.0, width / height, 1.0, 600.0);
+    gluPerspective(80.0, width / height, 1.0, 600.0);
+    glTranslatef(0.0, -15.0, -320.0);
 
-	glTranslatef(0.0, -15.0, -320.0);
+    glMatrixMode(GL_MODELVIEW);
+}
 
-	glMatrixMode(GL_MODELVIEW);
+void loadBuildingTexture() {
+    buildingTexture = SOIL_load_OGL_texture(
+        "building.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (buildingTexture == 0) {
+        std::cout << "Eroare la încărcarea texturii clădirii!" << std::endl;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, buildingTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
