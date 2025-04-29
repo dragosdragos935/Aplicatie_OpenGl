@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 #include <SOIL/SOIL.h>
+#include <vector>
 
 #define PI 3.14159265358979323846
 
@@ -16,6 +17,7 @@ GLuint roadTexture;
 void init(void);
 void display(void);
 void keyboard(unsigned char, int, int);
+void specialKeys(int, int, int);
 void resize(int, int);
 void draw_star(float, float);
 void house(float, float, float);
@@ -108,6 +110,7 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(specialKeys);
 
 	glutReshapeFunc(resize);
 	glutTimerFunc(0, timer, 0);  // Adăugăm timer-ul
@@ -143,6 +146,185 @@ GLfloat lightPosition[] = { 50.0f, 200.0f, 50.0f, 1.0f };  // Am mutat soarele m
 GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 GLfloat lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+// === VARIABILE GLOBALE PENTRU MASINA ===
+float carX = 0.0f, carY = 0.1f, carZ = 0.0f; // Pozitia masinii
+float carLength = 10.0f, carWidth = 6.0f, carHeight = 4.0f;
+float carSpeed = 2.0f;
+float carRotation = 0.0f; // Unghiul de rotatie al masinii
+float wheelRadius = 1.0f; // Raza rotilor
+float wheelWidth = 0.5f;  // Latimea rotilor
+
+// === VARIABILE PENTRU MODUL CAMERA ===
+bool followCar = false; // Modul urmarire masina
+
+// === FUNCTIE DE DESENARE ROTA ===
+void drawWheel(float x, float y, float z) {
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glRotatef(90, 0, 1, 0);
+    glColor3f(0.2f, 0.2f, 0.2f); // Culoare neagra pentru roata
+    
+    // Desenam roata ca un cilindru
+    GLUquadricObj *quadric = gluNewQuadric();
+    gluCylinder(quadric, wheelRadius, wheelRadius, wheelWidth, 32, 32);
+    
+    // Desenam centrul rotii
+    glColor3f(0.5f, 0.5f, 0.5f);
+    gluDisk(quadric, 0, wheelRadius, 32, 32);
+    glTranslatef(0, 0, wheelWidth);
+    gluDisk(quadric, 0, wheelRadius, 32, 32);
+    
+    gluDeleteQuadric(quadric);
+    glPopMatrix();
+}
+
+// === FUNCTIE DE DESENARE MASINA ===
+void drawCar() {
+    glPushMatrix();
+    glTranslatef(carX, carY, carZ);
+    glRotatef(carRotation, 0, 1, 0); // Rotim masina
+    
+    // Caroserie principala
+    glColor3f(1.0f, 0.0f, 0.0f); // Rosu
+    glBegin(GL_QUADS);
+    // Baza
+    glVertex3f(-carLength/2, 0, -carWidth/2);
+    glVertex3f(carLength/2, 0, -carWidth/2);
+    glVertex3f(carLength/2, 0, carWidth/2);
+    glVertex3f(-carLength/2, 0, carWidth/2);
+    // Top
+    glVertex3f(-carLength/2, carHeight, -carWidth/2);
+    glVertex3f(carLength/2, carHeight, -carWidth/2);
+    glVertex3f(carLength/2, carHeight, carWidth/2);
+    glVertex3f(-carLength/2, carHeight, carWidth/2);
+    // Fata
+    glVertex3f(carLength/2, 0, -carWidth/2);
+    glVertex3f(carLength/2, carHeight, -carWidth/2);
+    glVertex3f(carLength/2, carHeight, carWidth/2);
+    glVertex3f(carLength/2, 0, carWidth/2);
+    // Spate
+    glVertex3f(-carLength/2, 0, -carWidth/2);
+    glVertex3f(-carLength/2, carHeight, -carWidth/2);
+    glVertex3f(-carLength/2, carHeight, carWidth/2);
+    glVertex3f(-carLength/2, 0, carWidth/2);
+    // Stanga
+    glVertex3f(-carLength/2, 0, -carWidth/2);
+    glVertex3f(carLength/2, 0, -carWidth/2);
+    glVertex3f(carLength/2, carHeight, -carWidth/2);
+    glVertex3f(-carLength/2, carHeight, -carWidth/2);
+    // Dreapta
+    glVertex3f(-carLength/2, 0, carWidth/2);
+    glVertex3f(carLength/2, 0, carWidth/2);
+    glVertex3f(carLength/2, carHeight, carWidth/2);
+    glVertex3f(-carLength/2, carHeight, carWidth/2);
+    glEnd();
+
+    // Geamuri
+    glColor3f(0.7f, 0.9f, 1.0f); // Albastru deschis
+    glBegin(GL_QUADS);
+    // Geam fata
+    glVertex3f(carLength/2-0.1, carHeight*0.6, -carWidth/3);
+    glVertex3f(carLength/2-0.1, carHeight*0.9, -carWidth/3);
+    glVertex3f(carLength/2-0.1, carHeight*0.9, carWidth/3);
+    glVertex3f(carLength/2-0.1, carHeight*0.6, carWidth/3);
+    // Geam spate
+    glVertex3f(-carLength/2+0.1, carHeight*0.6, -carWidth/3);
+    glVertex3f(-carLength/2+0.1, carHeight*0.9, -carWidth/3);
+    glVertex3f(-carLength/2+0.1, carHeight*0.9, carWidth/3);
+    glVertex3f(-carLength/2+0.1, carHeight*0.6, carWidth/3);
+    glEnd();
+
+    // Faruri
+    glColor3f(1.0f, 1.0f, 0.8f); // Galben deschis
+    glBegin(GL_QUADS);
+    // Far stanga
+    glVertex3f(carLength/2, carHeight*0.3, -carWidth/2);
+    glVertex3f(carLength/2, carHeight*0.5, -carWidth/2);
+    glVertex3f(carLength/2, carHeight*0.5, -carWidth/3);
+    glVertex3f(carLength/2, carHeight*0.3, -carWidth/3);
+    // Far dreapta
+    glVertex3f(carLength/2, carHeight*0.3, carWidth/3);
+    glVertex3f(carLength/2, carHeight*0.5, carWidth/3);
+    glVertex3f(carLength/2, carHeight*0.5, carWidth/2);
+    glVertex3f(carLength/2, carHeight*0.3, carWidth/2);
+    glEnd();
+
+    // Roti
+    drawWheel(-carLength/3, wheelRadius, -carWidth/2-wheelWidth/2); // Rota stanga fata
+    drawWheel(carLength/3, wheelRadius, -carWidth/2-wheelWidth/2);  // Rota dreapta fata
+    drawWheel(-carLength/3, wheelRadius, carWidth/2+wheelWidth/2);  // Rota stanga spate
+    drawWheel(carLength/3, wheelRadius, carWidth/2+wheelWidth/2);   // Rota dreapta spate
+
+    glPopMatrix();
+}
+
+// === STRUCTURA PENTRU BOUNDING BOX CLADIRE ===
+struct Box {
+    float xMin, xMax, yMin, yMax, zMin, zMax;
+};
+
+// === VECTOR CU BOUNDING BOX-URI CLADIRI ===
+std::vector<Box> buildingBoxes;
+
+// === FUNCTIE DE ADAUGARE CLADIRI IN VECTOR ===
+void addBuildingBox(float x, float y, float z, float l, float h, float w) {
+    Box b;
+    b.xMin = x;
+    b.xMax = x + l;
+    b.yMin = y;
+    b.yMax = y + h;
+    b.zMin = z;
+    b.zMax = z + w;
+    buildingBoxes.push_back(b);
+}
+
+// === FUNCTIE DE INITIALIZARE BOUNDING BOX-URI CLADIRI ===
+void initBuildingBoxes() {
+    buildingBoxes.clear();
+    // Case (pozitii si dimensiuni din house1)
+    addBuildingBox(120, 0.1, 50, 45, 100+15, 45); // +acoperis
+    addBuildingBox(120, 0.1, 90, 45, 100+15, 45);
+    addBuildingBox(160, 0.1, 90, 45, 100+15, 45);
+    addBuildingBox(80, 0.1, 90, 45, 100+15, 45);
+    addBuildingBox(160, 0.1, 50, 45, 100+15, 45);
+    addBuildingBox(80, 0.1, 50, 45, 100+15, 45);
+    addBuildingBox(-130, 0.1, 120, 45, 100+15, 45);
+    addBuildingBox(-130, 0.1, 160, 45, 100+15, 45);
+    addBuildingBox(-90, 0.1, 120, 45, 100+15, 45);
+    addBuildingBox(-60, 0.1, 120, 45, 100+15, 45);
+    addBuildingBox(-90, 0.1, 160, 45, 100+15, 45);
+    addBuildingBox(-60, 0.1, 160, 45, 100+15, 45);
+    // Apartamente
+    addBuildingBox(150, 0, -150, 45, 100, 45);
+    addBuildingBox(80, 0, -90, 45, 100, 45);
+    addBuildingBox(150, 0, -90, 45, 100, 45);
+    addBuildingBox(150, 0, -30, 45, 100, 45);
+    addBuildingBox(-150, 0, -30, 45, 100, 45);
+    addBuildingBox(-150, 0, -110, 45, 100, 45);
+    addBuildingBox(-150, 0, -180, 45, 100, 45);
+    // Standuri
+    addBuildingBox(-10, 6, 130, 5, 6, 8);
+    addBuildingBox(30, 6, 130, 5, 6, 8);
+}
+
+// === FUNCTIE DE VERIFICARE COLIZIUNE MASINA-CLADIRE ===
+bool checkCarCollision(float newX, float newY, float newZ) {
+    float xMin = newX - carLength/2;
+    float xMax = newX + carLength/2;
+    float yMin = newY;
+    float yMax = newY + carHeight;
+    float zMin = newZ - carWidth/2;
+    float zMax = newZ + carWidth/2;
+    for (const auto& b : buildingBoxes) {
+        if (xMax > b.xMin && xMin < b.xMax &&
+            yMax > b.yMin && yMin < b.yMax &&
+            zMax > b.zMin && zMin < b.zMax) {
+            return true;
+        }
+    }
+    return false;
+}
 
 void init(void)
 {
@@ -182,6 +364,8 @@ void init(void)
 
     // Activăm texturarea
     glEnable(GL_TEXTURE_2D);
+
+    initBuildingBoxes();
 }
 
 void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius) {
@@ -589,11 +773,26 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
-    // Aplicăm transformările camerei
-    glRotatef(cameraRotX, 1.0f, 0.0f, 0.0f);
-    glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
-    glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
-    glTranslatef(-cameraX, -cameraY, -cameraZ);
+    if (followCar) {
+        // Camera urmareste masina de sus
+        float height = 30.0f;   // Inaltimea camerei (mai sus)
+        
+        // Pozitionam camera deasupra masinii
+        cameraX = carX;
+        cameraY = carY + height;
+        cameraZ = carZ;
+        
+        // Privim in jos spre masina
+        gluLookAt(cameraX, cameraY, cameraZ,
+                 carX, carY, carZ,  // Privim direct in jos
+                 0, 0, -1);         // Vector up este spre -Z pentru a mentine orientarea corecta
+    } else {
+        // Camera normala
+        glRotatef(cameraRotX, 1.0f, 0.0f, 0.0f);
+        glRotatef(cameraRotY, 0.0f, 1.0f, 0.0f);
+        glRotatef(cameraRotZ, 0.0f, 0.0f, 1.0f);
+        glTranslatef(-cameraX, -cameraY, -cameraZ);
+    }
     
     // Desenăm cerul primul
     drawSky();
@@ -704,6 +903,8 @@ void display(void)
     
     // Afișăm instrucțiunile
     displayInstructions();
+    
+    drawCar();
     
     glutSwapBuffers();
     
@@ -827,8 +1028,44 @@ void generateShadowMatrix(GLfloat shadowMat[16], GLfloat groundPlane[4], GLfloat
 	shadowMat[15] = dot - lightPos[3] * groundPlane[3];
 }
 
-void keyboard(unsigned char key, int x, int y)
-{
+// === FUNCTIE PENTRU TASTE SPECIALE (SAGETI) ===
+void specialKeys(int key, int x, int y) {
+    switch(key) {
+        // Control masina cu sageti
+        case GLUT_KEY_UP: {
+            float rad = carRotation * PI / 180.0f;
+            float nx = carX + sin(rad) * carSpeed;
+            float nz = carZ - cos(rad) * carSpeed;
+            if (!checkCarCollision(nx, carY, nz)) {
+                carX = nx;
+                carZ = nz;
+            }
+            break;
+        }
+        case GLUT_KEY_DOWN: {
+            float rad = carRotation * PI / 180.0f;
+            float nx = carX - sin(rad) * carSpeed;
+            float nz = carZ + cos(rad) * carSpeed;
+            if (!checkCarCollision(nx, carY, nz)) {
+                carX = nx;
+                carZ = nz;
+            }
+            break;
+        }
+        case GLUT_KEY_LEFT: {
+            carRotation += 5.0f; // Rotire stanga
+            break;
+        }
+        case GLUT_KEY_RIGHT: {
+            carRotation -= 5.0f; // Rotire dreapta
+            break;
+        }
+    }
+    glutPostRedisplay();
+}
+
+// === MODIFICARE FUNCTIE KEYBOARD ===
+void keyboard(unsigned char key, int x, int y) {
     float rotationSpeed = 2.0f;
     
     // Calculăm direcția de deplasare bazată pe rotația camerei
@@ -839,7 +1076,7 @@ void keyboard(unsigned char key, int x, int y)
     float rightZ = sin(radY);
     
     switch(key) {
-        // Deplasare înainte/înapoi
+        // Control camera cu WASD
         case 'w':
             cameraX += forwardX * moveSpeed;
             cameraZ += forwardZ * moveSpeed;
@@ -848,8 +1085,6 @@ void keyboard(unsigned char key, int x, int y)
             cameraX -= forwardX * moveSpeed;
             cameraZ -= forwardZ * moveSpeed;
             break;
-            
-        // Deplasare stânga/dreapta
         case 'a':
             cameraX -= rightX * moveSpeed;
             cameraZ -= rightZ * moveSpeed;
@@ -859,23 +1094,33 @@ void keyboard(unsigned char key, int x, int y)
             cameraZ += rightZ * moveSpeed;
             break;
             
-        // Deplasare sus/jos
+        // Resetare masina
+        case 't':
+            carX = 0.0f; carY = 0.1f; carZ = 0.0f;
+            carRotation = 0.0f;
+            break;
+            
+        // Moduri camera
+        case 'm':
+            followCar = true;
+            break;
+        case 'n':
+            followCar = false;
+            break;
+            
+        // Control camera (sus/jos)
         case 'q': cameraY += moveSpeed; break;
         case 'e': cameraY -= moveSpeed; break;
             
-        // Rotație sus/jos
+        // Rotație camera
         case 'i': cameraRotX += rotationSpeed; break;
         case 'k': cameraRotX -= rotationSpeed; break;
-            
-        // Rotație stânga/dreapta
         case 'j': cameraRotY -= rotationSpeed; break;
         case 'l': cameraRotY += rotationSpeed; break;
-            
-        // Rotație în jurul axei Z
         case 'u': cameraRotZ += rotationSpeed; break;
         case 'o': cameraRotZ -= rotationSpeed; break;
             
-        // Resetare cameră
+        // Resetare camera
         case 'r':
             cameraX = 0.0f;
             cameraY = 5.0f;
@@ -883,12 +1128,11 @@ void keyboard(unsigned char key, int x, int y)
             cameraRotX = 0.0f;
             cameraRotY = 0.0f;
             cameraRotZ = 0.0f;
+            followCar = false;
             break;
     }
-    
     glutPostRedisplay();
 }
-
 
 void resize(int width, int height)
 {
@@ -1082,4 +1326,55 @@ void house1Shadow()
     apartShadow(-150, 0, -30);
     apartShadow(-150, 0, -110);
     apartShadow(-150, 0, -180);
+}
+
+// === STRUCTURI SI VARIABILE PENTRU PIETONI ===
+struct Pedestrian {
+    float x, y, z;
+    float speed;
+    float direction; // unghi in grade
+    float timeToChangeDirection;
+    float size;
+};
+std::vector<Pedestrian> pedestrians;
+const int NUM_PEDESTRIANS = 10;
+float pedestrianSize = 1.0f;
+void initPedestrians();
+void drawPedestrian(const Pedestrian& p);
+void updatePedestrians(float deltaTime);
+
+// === STRUCTURI SI VARIABILE PENTRU STALPI DE ILUMINAT ===
+struct StreetLight {
+    float x, y, z;
+    float height;
+    bool isOn;
+};
+std::vector<StreetLight> streetLights;
+const int NUM_STREET_LIGHTS = 20;
+void initStreetLights();
+void drawStreetLight(const StreetLight& sl);
+
+void initStreetLights() {
+    streetLights.clear();
+    // Stâlpi de-a lungul drumurilor principale
+    for (int i = -200; i <= 200; i += 50) {
+        StreetLight sl;
+        sl.x = i;
+        sl.y = 0.0f;
+        sl.z = 0.0f;
+        sl.height = 15.0f;
+        sl.isOn = true;
+        streetLights.push_back(sl);
+        sl.x = 0.0f;
+        sl.z = i;
+        streetLights.push_back(sl);
+    }
+    // Stâlpi suplimentari la pozițiile copacilor
+    streetLights.push_back({-25.0f, 0.0f, 50.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -40.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, 20.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -10.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -80.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -120.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -160.0f, 15.0f, true});
 }
