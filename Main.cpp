@@ -9,6 +9,163 @@
 
 using namespace std;
 
+// === STRUCTURA PENTRU BOUNDING BOX CLADIRE ===
+struct Box {
+    float xMin, xMax, yMin, yMax, zMin, zMax;
+};
+
+// === VECTOR CU BOUNDING BOX-URI CLADIRI ===
+std::vector<Box> buildingBoxes;
+// === VARIABILE GLOBALE PENTRU MASINA ===
+float carX = 0.0f, carY = 0.1f, carZ = 0.0f; // Pozitia masinii
+float carLength = 10.0f, carWidth = 6.0f, carHeight = 4.0f;
+float carSpeed = 2.0f;
+float carRotation = 0.0f; // Unghiul de rotatie al masinii
+float wheelRadius = 1.0f; // Raza rotilor
+float wheelWidth = 0.5f;  // Latimea rotilor
+
+// === STRUCTURI SI VARIABILE PENTRU PIETONI ===
+struct Pedestrian {
+    float x, y, z;
+    float speed;
+    float direction; // unghi in grade (nu mai e folosit pentru directie random)
+    float timeToChangeDirection;
+    float size;
+    float centerX, centerZ; // centrul cercului
+    float angle;            // unghiul curent pe cerc (radiani)
+    float radius;           // raza cercului
+};
+std::vector<Pedestrian> pedestrians;
+const int NUM_PEDESTRIANS = 10;
+float pedestrianSize = 1.0f;
+void initPedestrians();
+void drawPedestrian(const Pedestrian& p);
+void updatePedestrians(float deltaTime);
+
+// === STRUCTURI SI VARIABILE PENTRU STALPI DE ILUMINAT ===
+struct StreetLight {
+    float x, y, z;
+    float height;
+    bool isOn;
+};
+std::vector<StreetLight> streetLights;
+const int NUM_STREET_LIGHTS = 20;
+void initStreetLights();
+void drawStreetLight(const StreetLight& sl);
+
+void initStreetLights() {
+    streetLights.clear();
+    // Stâlpi de-a lungul drumurilor principale
+    for (int i = -200; i <= 200; i += 50) {
+        StreetLight sl;
+        sl.x = i;
+        sl.y = 0.0f;
+        sl.z = 0.0f;
+        sl.height = 15.0f;
+        sl.isOn = true;
+        streetLights.push_back(sl);
+        sl.x = 0.0f;
+        sl.z = i;
+        streetLights.push_back(sl);
+    }
+    // Stâlpi suplimentari la pozițiile copacilor
+    streetLights.push_back({-25.0f, 0.0f, 50.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -40.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, 20.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -10.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -80.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -120.0f, 15.0f, true});
+    streetLights.push_back({-25.0f, 0.0f, -160.0f, 15.0f, true});
+}
+
+// Implementarea funcțiilor pentru pietoni
+void initPedestrians() {
+    pedestrians.clear();
+    for (int i = 0; i < NUM_PEDESTRIANS; i++) {
+        Pedestrian p;
+        // Poziționăm centrul cercului aleator
+        p.centerX = rand() % 400 - 200;
+        p.centerZ = rand() % 400 - 200;
+        p.radius = 10.0f + rand() % 20; // raza între 10 și 30
+        p.angle = (rand() % 360) * PI / 180.0f; // unghi inițial aleator
+        p.y = 0.5f;
+        p.speed = 0.5f + (rand() % 100) / 100.0f;  // viteză între 0.5 și 1.5
+        p.size = pedestrianSize;
+        // Poziția inițială pe cerc
+        p.x = p.centerX + cos(p.angle) * p.radius;
+        p.z = p.centerZ + sin(p.angle) * p.radius;
+        pedestrians.push_back(p);
+    }
+}
+
+void drawPedestrian(const Pedestrian& p) {
+    glPushMatrix();
+    glTranslatef(p.x, p.y, p.z);
+    // Orientează pietonul spre direcția de mers (tangent la cerc)
+    float angleDeg = atan2(sin(p.angle), cos(p.angle)) * 180.0f / PI + 90.0f;
+    glRotatef(angleDeg, 0, 1, 0);
+    
+    // Corp
+    glColor3f(0.0f, 0.0f, 1.0f);  // Albastru
+    glPushMatrix();
+    glScalef(0.5f, 1.0f, 0.3f);
+    glutSolidCube(p.size);
+    glPopMatrix();
+    
+    // Cap
+    glColor3f(1.0f, 0.8f, 0.6f);  // Culoare pielii
+    glPushMatrix();
+    glTranslatef(0, p.size * 0.8f, 0);
+    glutSolidSphere(p.size * 0.3f, 16, 16);
+    glPopMatrix();
+    
+    // Brațe
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glPushMatrix();
+    glTranslatef(p.size * 0.4f, 0, 0);
+    glScalef(0.2f, 0.8f, 0.2f);
+    glutSolidCube(p.size);
+    glPopMatrix();
+    
+    glPushMatrix();
+    glTranslatef(-p.size * 0.4f, 0, 0);
+    glScalef(0.2f, 0.8f, 0.2f);
+    glutSolidCube(p.size);
+    glPopMatrix();
+    
+    glPopMatrix();
+}
+
+// === FUNCTIE DE VERIFICARE COLIZIUNE MASINA-CLADIRE ===
+bool checkCarCollision(float newX, float newY, float newZ) {
+    float xMin = newX - carLength / 2;
+    float xMax = newX + carLength / 2;
+    float yMin = newY;
+    float yMax = newY + carHeight;
+    float zMin = newZ - carWidth / 2;
+    float zMax = newZ + carWidth / 2;
+    for (const auto& b : buildingBoxes) {
+        if (xMax > b.xMin && xMin < b.xMax &&
+            yMax > b.yMin && yMin < b.yMax &&
+            zMax > b.zMin && zMin < b.zMax) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void updatePedestrians(float deltaTime) {
+    for (auto& p : pedestrians) {
+        // Pietonul se rotește pe cerc
+        float angularSpeed = p.speed / p.radius; // viteză unghiulară
+        p.angle += angularSpeed * deltaTime;
+        // Actualizează poziția pe cerc
+        p.x = p.centerX + cos(p.angle) * p.radius;
+        p.z = p.centerZ + sin(p.angle) * p.radius;
+    }
+}
+
+
 float cc[20][2];
 GLuint skyTexture;
 GLuint roadTexture;
@@ -37,7 +194,7 @@ void displayInstructions(void);
 void renderText(float x, float y, const char* text);
 void loadBuildingTexture(void);
 void timer(int value);
-
+bool checkCarCollision(float newX, float newY, float newZ);
 // Declarații pentru funcțiile de umbre
 void houseShadow(float x, float y, float z);
 void apartShadow(float x, float y, float z);
@@ -147,13 +304,7 @@ GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 GLfloat lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-// === VARIABILE GLOBALE PENTRU MASINA ===
-float carX = 0.0f, carY = 0.1f, carZ = 0.0f; // Pozitia masinii
-float carLength = 10.0f, carWidth = 6.0f, carHeight = 4.0f;
-float carSpeed = 2.0f;
-float carRotation = 0.0f; // Unghiul de rotatie al masinii
-float wheelRadius = 1.0f; // Raza rotilor
-float wheelWidth = 0.5f;  // Latimea rotilor
+
 
 // === VARIABILE PENTRU MODUL CAMERA ===
 bool followCar = false; // Modul urmarire masina
@@ -259,13 +410,7 @@ void drawCar() {
     glPopMatrix();
 }
 
-// === STRUCTURA PENTRU BOUNDING BOX CLADIRE ===
-struct Box {
-    float xMin, xMax, yMin, yMax, zMin, zMax;
-};
 
-// === VECTOR CU BOUNDING BOX-URI CLADIRI ===
-std::vector<Box> buildingBoxes;
 
 // === FUNCTIE DE ADAUGARE CLADIRI IN VECTOR ===
 void addBuildingBox(float x, float y, float z, float l, float h, float w) {
@@ -308,23 +453,7 @@ void initBuildingBoxes() {
     addBuildingBox(30, 6, 130, 5, 6, 8);
 }
 
-// === FUNCTIE DE VERIFICARE COLIZIUNE MASINA-CLADIRE ===
-bool checkCarCollision(float newX, float newY, float newZ) {
-    float xMin = newX - carLength/2;
-    float xMax = newX + carLength/2;
-    float yMin = newY;
-    float yMax = newY + carHeight;
-    float zMin = newZ - carWidth/2;
-    float zMax = newZ + carWidth/2;
-    for (const auto& b : buildingBoxes) {
-        if (xMax > b.xMin && xMin < b.xMax &&
-            yMax > b.yMin && yMin < b.yMax &&
-            zMax > b.zMin && zMin < b.zMax) {
-            return true;
-        }
-    }
-    return false;
-}
+
 
 void init(void)
 {
@@ -366,6 +495,8 @@ void init(void)
     glEnable(GL_TEXTURE_2D);
 
     initBuildingBoxes();
+    initStreetLights();
+    initPedestrians();
 }
 
 void drawTree(float x, float y, float z, float trunkHeight, float trunkRadius, float leavesRadius) {
@@ -842,6 +973,11 @@ void display(void)
     drawTree(-25, 1, -120, 20, 2.0, 5.0);
     drawTree(-25, 1, -160, 20, 2.0, 5.0);
     
+    // Desenăm stâlpii de iluminat
+    for (size_t i = 0; i < streetLights.size(); ++i) {
+        drawStreetLight(streetLights[i]);
+    }
+    
     // Desenăm drumurile
     glDisable(GL_LIGHTING);
     glBegin(GL_QUADS);
@@ -905,6 +1041,17 @@ void display(void)
     displayInstructions();
     
     drawCar();
+    
+    // Desenăm și actualizăm pietonii
+    static float lastTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    float currentTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    float deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+    
+    updatePedestrians(deltaTime);
+    for (size_t i = 0; i < pedestrians.size(); ++i) {
+        drawPedestrian(pedestrians[i]);
+    }
     
     glutSwapBuffers();
     
@@ -1328,53 +1475,38 @@ void house1Shadow()
     apartShadow(-150, 0, -180);
 }
 
-// === STRUCTURI SI VARIABILE PENTRU PIETONI ===
-struct Pedestrian {
-    float x, y, z;
-    float speed;
-    float direction; // unghi in grade
-    float timeToChangeDirection;
-    float size;
-};
-std::vector<Pedestrian> pedestrians;
-const int NUM_PEDESTRIANS = 10;
-float pedestrianSize = 1.0f;
-void initPedestrians();
-void drawPedestrian(const Pedestrian& p);
-void updatePedestrians(float deltaTime);
+void drawStreetLight(const StreetLight& sl) {
+    glPushMatrix();
+    glTranslatef(sl.x, sl.y, sl.z);
 
-// === STRUCTURI SI VARIABILE PENTRU STALPI DE ILUMINAT ===
-struct StreetLight {
-    float x, y, z;
-    float height;
-    bool isOn;
-};
-std::vector<StreetLight> streetLights;
-const int NUM_STREET_LIGHTS = 20;
-void initStreetLights();
-void drawStreetLight(const StreetLight& sl);
+    // Rotește cilindrul ca să fie vertical (pe OY)
+    glRotatef(-90, 1, 0, 0);
 
-void initStreetLights() {
-    streetLights.clear();
-    // Stâlpi de-a lungul drumurilor principale
-    for (int i = -200; i <= 200; i += 50) {
-        StreetLight sl;
-        sl.x = i;
-        sl.y = 0.0f;
-        sl.z = 0.0f;
-        sl.height = 15.0f;
-        sl.isOn = true;
-        streetLights.push_back(sl);
-        sl.x = 0.0f;
-        sl.z = i;
-        streetLights.push_back(sl);
+    // Corpul stâlpului - cilindru gri
+    glColor3f(0.4f, 0.4f, 0.4f);
+    GLUquadric* quad = gluNewQuadric();
+    gluCylinder(quad, 0.5, 0.5, sl.height, 16, 16);
+    gluDeleteQuadric(quad);
+
+    // Sfera de lumină verde în vârf
+    glTranslatef(0, 0, sl.height);
+    glColor3f(0.2f, 1.0f, 0.2f); // VERDE
+    glutSolidSphere(1.2, 16, 16);
+
+    // Efect de halou verde (cerc semi-transparent)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.2f, 1.0f, 0.2f, 0.3f); // verde, transparent
+    float haloRadius = 4.0f;
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex3f(0, 0, 0); // centru
+    for (int angle = 0; angle <= 360; angle += 10) {
+        float rad = angle * PI / 180.0f;
+        glVertex3f(cos(rad) * haloRadius, sin(rad) * haloRadius, 0);
     }
-    // Stâlpi suplimentari la pozițiile copacilor
-    streetLights.push_back({-25.0f, 0.0f, 50.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, -40.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, 20.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, -10.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, -80.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, -120.0f, 15.0f, true});
-    streetLights.push_back({-25.0f, 0.0f, -160.0f, 15.0f, true});
+    glEnd();
+    glDisable(GL_BLEND);
+
+    glPopMatrix();
 }
+
